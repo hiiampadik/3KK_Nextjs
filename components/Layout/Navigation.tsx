@@ -77,7 +77,7 @@ const Navigation: FunctionComponent<Props> = ({cover, description}) => {
                         >
                             <p>{router.locale === "cs" ? "En" : "Cz"}</p>
                         </Link>
-                        <a href={"https://goout.net/cs/divadlo-3+kk/pzwidng/"}
+                        <a href={"https://connect.boomevents.org/cs/organizer/d2324245-882a-43e7-8e7d-577816aa2926"}
                            className={classNames([styles.smallLink, styles.tickets])}>
                             <p>{t('tickets')}</p>
                         </a>
