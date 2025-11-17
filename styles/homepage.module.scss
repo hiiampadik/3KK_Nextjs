@@ -30,16 +30,15 @@
     border-radius: 50%;
   }
   ul {
-    margin: 20px 0 0;
+    margin: 0;
     padding: 0;
     display: flex;
     flex-direction: column;
-    gap: 10px;
   }
   li{
     list-style: none;
     border-bottom: 1px black solid;
-    padding-bottom: 10px;
+    padding: 0;
     display: flex;
     justify-content: space-between;
     gap: 10px;
@@ -59,6 +58,7 @@
   display: flex;
   gap: 10px;
   text-decoration: none;
+  padding: 20px 0 10px;
 
   .dateContainer{
     flex: 0 0 230px;
@@ -79,6 +79,15 @@
     h2 {
       @include headline2;
       margin-bottom: 8px;
+    }
+    .tag {
+      width: fit-content;
+      margin-bottom: 8px;
+      margin-left: -3px;
+      @include mono;
+      background-color: #32FE6B;
+      padding: 8px 18px;
+      border-radius: 30px;
     }
     .description {
       @include mono;
@@ -101,6 +110,7 @@
 }
 
 .externalLinks {
+  padding: 20px 0 10px;
   flex: 0 0 200px;
   justify-content: flex-end;
   display: flex;
@@ -144,37 +154,40 @@
 
   .scrollingPart {
     flex: 1 0 auto;
-    max-width: 1000px;
     @media (max-width: $breakpoint-xl-max) {
       flex: 1 1 auto;
     }
   }
-  .preview {
-    flex: 1 1 auto;
-    height: 400px;
-    max-height: calc(100vh - 40px);
-    position: sticky;
-    top: 20px;
-    border-radius: 10px;
-    overflow: hidden;
-    background: #E5FC54;
-    @media (max-width: $breakpoint-xl-max) {
-      display: none;
-    }
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
+}
+
+.hoverCover {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 9999;
+  width: 400px;
+  max-width: 90vw;
+  height: auto;
+  border-radius: 10px;
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: auto;
+    display: block;
+
+    opacity: 1 !important;
   }
-  .preview::after {
-    position: absolute;
-    content: '';
-    z-index: 1;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    @include shadowBox;
-  }
+}
+
+.hoverCover::after {
+  position: absolute;
+  content: '';
+  z-index: 1;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  @include shadowBox;
 }

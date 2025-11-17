@@ -40,6 +40,14 @@ export default function Contact({data}: {data: ContactSanity}) {
                             IČO: 09537279
                         </p>
                     </div>
+
+                    <div className={styles.mapContainer}>
+                    <iframe
+                        className={styles.map}
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2607.046176503824!2d16.62000311238681!3d49.19968357650822!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4712954b9a9af541%3A0x94f8c2b38d8eaed9!2sDivadlo%203%2Bkk!5e0!3m2!1scs!2scz!4v1763382702267!5m2!1scs!2scz"
+                        loading="lazy"
+                        referrerPolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
                 </div>
             </div>
         </Layout>

@@ -15,12 +15,8 @@
 }
 
 .navWithCover {
-  height: calc(100vh - 130px);
+  height: calc(100vh - 235px);
   min-height: 400px;
-
-  @media (max-width: $breakpoint-sm-max) {
-    height: calc(100vh - 230px);
-  }
 }
 
 .navWrapper {

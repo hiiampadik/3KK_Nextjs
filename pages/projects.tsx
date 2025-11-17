@@ -22,17 +22,66 @@ export default function Projects({data}: {data: ProjectSanity[]}) {
             .sort((a, b) => new Date(b.premiere).getTime() - new Date(a.premiere).getTime());
     }, [filter])
 
+
+    const [archivedProjects, ongoingProjects, plannedProjects] = useMemo(() => {
+        const archived: ProjectSanity[] = [];
+        const ongoing: ProjectSanity[] = [];
+        const planned: ProjectSanity[] = [];
+
+        data.forEach(project => {
+            if (project.hideInRepertoire) return;
+
+            if (project.status === 'archived') {
+                archived.push(project);
+            } else if (project.status === 'ongoing') {
+                ongoing.push(project);
+            } else if (project.status === 'planned') {
+                planned.push(project);
+            }
+        });
+
+        const sortByPremiereDesc = (a: ProjectSanity, b: ProjectSanity) => new Date(b.premiere).getTime() - new Date(a.premiere).getTime();
+
+        return [
+            archived.sort(sortByPremiereDesc),
+            ongoing.sort(sortByPremiereDesc),
+            planned.sort(sortByPremiereDesc),
+        ];
+    }, [data]);
+
+    const getProjectsToDisplay = () => {
+        switch (filter) {
+            case 'archived':
+                return archivedProjects;
+            case 'ongoing':
+                return ongoingProjects;
+            case 'planned':
+                return plannedProjects;
+            default:
+                return [];
+        }
+    }
+
     return (
         <Layout title={t('projects')}>
             <div className={styles.projectsContainer}>
                 <h1>{t('projects')}</h1>
                 <div className={styles.filterContainer}>
-                    <button className={filter === 'archived' ? styles.selected : ''} onClick={() => setFilter('archived')}>{t('archived')}</button>
-                    <button className={filter === 'ongoing' ? styles.selected : ''} onClick={() => setFilter('ongoing')}>{t('ongoing')}</button>
-                    <button className={filter === 'planned' ? styles.selected : ''} onClick={() => setFilter('planned')}>{t('planned')}</button>
+                    {archivedProjects.length > 0 && (
+                        <button className={filter === 'archived' ? styles.selected : ''} onClick={() => setFilter('archived')}>
+                            {t('archived')}{' ['}{archivedProjects.length.toString()}{']'}
+                        </button>)}
+                    {ongoingProjects.length > 0 && (
+                        <button className={filter === 'ongoing' ? styles.selected : ''} onClick={() => setFilter('ongoing')}>
+                            {t('ongoing')}{' ['}{ongoingProjects.length.toString()}{']'}
+                        </button>)}
+                    {plannedProjects.length > 0 && (
+                        <button className={filter === 'planned' ? styles.selected : ''} onClick={() => setFilter('planned')}>
+                            {t('planned')}{' ['}{plannedProjects.length.toString()}{']'}
+                        </button>)}
                 </div>
                 <ul className={styles.projectsList}>
-                    {projects.map(project => (
+                    {getProjectsToDisplay().map(project => (
                         <li key={project._id}>
                             <Link href={`/projects/[slug]`}
                                   as={`/projects/${project.slug.current}`}
