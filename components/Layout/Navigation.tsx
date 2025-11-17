@@ -9,7 +9,6 @@ import styles from './navigation.module.scss';
 import {classNames} from '@/components/utils/classNames';
 import {useTranslations} from 'next-intl';
 import {useLocale} from '@/components/utils/useLocale';
-import logo from '@/public/logos/3.svg';
 import Figure from '@/components/Sanity/Figure';
 import BlockContent from '@/components/Sanity/BlockContent';
 import {LocalizedRichParagraph} from '@/api/sanity.types';
@@ -26,9 +25,8 @@ const Navigation: FunctionComponent<Props> = ({cover, description}) => {
     const locale = useLocale()
     const t = useTranslations('Navigation');
 
-    const animation = sessionStorage.getItem('animation');
     const [showOverlay, setShowOverlay] = useState(false);
-    const [navVisible, setNavVisible] = useState(animation !== null);
+    const [navVisible, setNavVisible] = useState(true);
     const [lastScrollY, setLastScrollY] = useState(0);
 
     useEffect(() => {
@@ -38,16 +36,6 @@ const Navigation: FunctionComponent<Props> = ({cover, description}) => {
         router.events.on('routeChangeComplete', handleRouteChange);
         return () => router.events.off('routeChangeComplete', handleRouteChange);
     }, [router.events]);
-
-    useEffect(() => {
-        if (animation === null) {
-            setTimeout(() => {
-                setNavVisible(true);
-                sessionStorage.setItem('animation', 'done');
-            }, 100);
-        }
-
-    }, []);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -110,18 +98,6 @@ const Navigation: FunctionComponent<Props> = ({cover, description}) => {
                 </div>
 
                 <div className={styles.navRight}>
-                    <Link
-                        href={router.asPath}
-                        locale={router.locale === "cs" ? "en" : "cs"}
-                        className={classNames([styles.smallLink, styles.link4])}
-                        prefetch={false}
-                    >
-                    <p>{router.locale === "cs" ? "En" : "Cz"}</p>
-                    </Link>
-                    <a href={"https://connect.boomevents.org/cs/organizer/d2324245-882a-43e7-8e7d-577816aa2926"}
-                       className={classNames([styles.smallLink, styles.tickets, styles.link5])}>
-                        <p>{t('tickets')}</p>
-                    </a>
                     <a href={"https://www.instagram.com/3pluskk/"}
                        className={classNames([styles.smallLink, styles.link6])}>
                         <p>IG</p>
@@ -130,6 +106,18 @@ const Navigation: FunctionComponent<Props> = ({cover, description}) => {
                        className={classNames([styles.smallLink, styles.link7])}>
                         <p>FB</p>
                     </a>
+                    <a href={"https://connect.boomevents.org/cs/organizer/d2324245-882a-43e7-8e7d-577816aa2926"}
+                       className={classNames([styles.smallLink, styles.tickets, styles.link8])}>
+                        <p>{t('tickets')}</p>
+                    </a>
+                    <Link
+                        href={router.asPath}
+                        locale={router.locale === "cs" ? "en" : "cs"}
+                        className={classNames([styles.smallLink, styles.link9])}
+                        prefetch={false}
+                    >
+                        <p>{router.locale === "cs" ? "En" : "Cz"}</p>
+                    </Link>
                 </div>
             </nav>
 

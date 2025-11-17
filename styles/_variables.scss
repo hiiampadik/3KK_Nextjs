@@ -64,13 +64,9 @@ $bRadius: 8px;
 @mixin headline {
   font-family: neue-haas-unica, 'Helvetica', 'Arial', sans-serif;
   font-weight: 400;
-  font-size: 60px;
+  font-size: 48px;
   letter-spacing: -0.02em;
   line-height: 1.15em;
-
-  @media (max-width: $breakpoint-sm-max) {
-    font-size: 40px;
-  }
 }
 
 
@@ -137,7 +133,6 @@ $bRadius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: $gray;
 
   @include mono;
 
@@ -145,6 +140,7 @@ $bRadius: 8px;
   border-radius: $bRadius;
   border: 1px $black solid;
   padding: 8px 16px;
+  background: white;
 
   @media (hover: hover) {
     &:hover {

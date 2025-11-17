@@ -93,8 +93,11 @@
     @include menuLinkBig;
   }
   .logo {
-    margin-right: 10px;
+    margin-right: 4px;
     svg {
+      path {
+        fill: $black;
+      }
       display: block;
       width: 12em;
     }
@@ -114,9 +117,10 @@
 
   .smallLink {
    @include outlinedLink;
+    padding: 9px 19px;
 
     &.tickets{
-      background-image: linear-gradient(90deg, $gray 25%, #E5FC54 45%, $gray 75%);
+      background-image: linear-gradient(90deg, white 25%, #E5FC54 45%, white 75%);
       animation: linkAnimation 6s linear infinite;
       background-size: 200% 100%;
       @media (hover: hover) {
@@ -126,6 +130,18 @@
       }
     }
   }
+
+  @media (max-width: $breakpoint-md-max) {
+    .link6, .link7, .link8 {
+        display: none;
+    }
+  }
+  @media (max-width: $breakpoint-xs-max) {
+    .link9 {
+        display: none;
+    }
+  }
+
 }
 
 
