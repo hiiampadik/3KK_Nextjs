@@ -14,27 +14,64 @@
   }
 }
 
-.navWithCover {
-  height: calc(100vh - 235px);
-  min-height: 400px;
-}
 
-.navWrapper {
-  position: relative;
+.nav {
+  padding: 30px;
+  @media (max-width: $breakpoint-sm-max) {
+    padding: 20px;
+  }
+  @media (max-width: $breakpoint-xs-max) {
+    padding: 15px;
+  }
+  position: fixed;
+  width: 100vw;
+  z-index: 100;
+  display: flex;
+  gap: 10px;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  transition: transform 0.3s ease-in-out;
 
+  @media (max-width: $breakpoint-sm-max) {
+    gap: 6px;
+  }
 
-  nav {
-    @include margin;
-    position: relative;
-    z-index: 100;
-    display: flex;
-    gap: 10px;
-    flex-wrap: nowrap;
-    align-items: flex-start;
-    justify-content: space-between;
+  &.show {
+    .navLeft > *:nth-child(1), .navRight > *:nth-child(1) {
+      transform: translateY(0);
+      transition: transform 0.3s ease-in-out 0s;
+    }
+    .navLeft > *:nth-child(2), .navRight > *:nth-child(2) {
+      transform: translateY(0);
+      transition: transform 0.3s ease-in-out 0.05s;
+    }
+    .navLeft > *:nth-child(3), .navRight > *:nth-child(3) {
+      transform: translateY(0);
+      transition: transform 0.3s ease-in-out 0.1s;
+    }
+    .navLeft > *:nth-child(4), .navRight > *:nth-child(4) {
+      transform: translateY(0);
+      transition: transform 0.3s ease-in-out 0.15s;
+    }
+  }
 
-    @media (max-width: $breakpoint-sm-max) {
-      gap: 6px;
+  &.hidden {
+    .navLeft > *:nth-child(1), .navRight > *:nth-child(1) {
+      transform: translateY(-200px);
+      transition: transform 0.3s ease-in-out 0.0s;
+    }
+    .navLeft > *:nth-child(2), .navRight > *:nth-child(2) {
+      transform: translateY(-200px);
+      transition: transform 0.3s ease-in-out 0.05s;
+    }
+    .navLeft > *:nth-child(3), .navRight > *:nth-child(3) {
+      transform: translateY(-200px);
+      transition: transform 0.3s ease-in-out 0.1s;
+    }
+    .navLeft > *:nth-child(4), .navRight > *:nth-child(4) {
+      transform: translateY(-200px);
+      transition: transform 0.3s ease-in-out 0.15s;
     }
   }
 
@@ -43,19 +80,12 @@
     gap: 10px;
     flex-wrap: wrap;
     flex: 1 1 auto;
-    @media (max-width: $breakpoint-sm-max) {
-      gap: 6px;
-    }
-    @media (max-width: $breakpoint-xs-max) {
-      flex-direction: column;
-      align-items: flex-start;
-    }
+    align-items: center;
   }
 
   .navRight {
     display: flex;
-    flex-direction: column;
-    gap: 6px;
+    gap: 10px;
     flex: 0 0 auto;
   }
 
@@ -63,62 +93,32 @@
     @include menuLinkBig;
   }
   .logo {
-    align-items: stretch;
+    margin-right: 10px;
     img {
-      width: 6em;
+      display: block;
+      width: 12em;
     }
   }
   .link1 {
-    border-radius: 60px;
     background: #E5FC54;
-    animation-delay: 0.3s;
+    animation-delay: 0s;
   }
   .link2 {
     background: #C294FF;
-    animation-delay: 0.5s;
+    animation-delay: 1s;
   }
   .link3 {
-    border-radius: 60px;
     background: #32FE6B;
-    animation-delay: 0.6s;
+    animation-delay: 2s;
   }
+
   .smallLink {
-    @include mono;
+   @include outlinedLink;
 
-    background: $gray;
-    text-decoration: none;
-    border-radius: 30px;
-    width: 40px;
-    border: 1px $black solid;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    &.language{
-      height: 40px;
-      transition: 0.2s;
-      @media (hover: hover) {
-        &:hover {
-          transform: rotate(90deg);
-        }
-      }
-    }
     &.tickets{
-      writing-mode: vertical-rl;
-      text-orientation: mixed;
-      padding: 18px 0;
-      background-image: linear-gradient(0deg, $gray 25%, #E5FC54 45%, $gray 75%);
+      background-image: linear-gradient(90deg, $gray 25%, #E5FC54 45%, $gray 75%);
       animation: linkAnimation 6s linear infinite;
-      background-size: 100% 200%;
-      @media (hover: hover) {
-        &:hover {
-          @include underline
-        }
-      }
-    }
-    &.socials {
-      height: 40px;
-      transition: 0.2s;
+      background-size: 200% 100%;
       @media (hover: hover) {
         &:hover {
           @include underline
@@ -128,15 +128,16 @@
   }
 }
 
+
 @keyframes linkAnimation {
   0% {
-    background-position-y: -50%;
+    background-position-x: -50%;
   }
   50% {
-    background-position-y: 150%;
+    background-position-x: 150%;
   }
   100% {
-    background-position-y: 150%;
+    background-position-x: 150%;
   }
 }
 
@@ -156,14 +157,11 @@
 }
 
 .coverContainer {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
   display: flex;
   flex-direction: column;
   gap: 10px;
+  height: calc(100vh - 235px);
+  min-height: 400px;
 
   @media (max-width: $breakpoint-sm-max) {
     margin-top: 6px;
@@ -193,7 +191,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(to top, rgba(248, 248, 248, 1) 0%, rgba(248, 248, 248, 0.7) 20%, rgba(248, 248, 248, 0) 40%, rgba(248, 248, 248, 0) 30%, rgba(248, 248, 248, 0.5) 100%);
+    background: linear-gradient(to top, rgba(248, 248, 248, 1) 0%, rgba(248, 248, 248, 0.7) 20%, rgba(248, 248, 248, 0) 40%, rgba(248, 248, 248, 0) calc(100% - 200px), rgba(248, 248, 248, 1) 100%);
   }
 
   .description {
@@ -203,3 +201,6 @@
   }
 }
 
+.spacer {
+  height: 250px;
+}
