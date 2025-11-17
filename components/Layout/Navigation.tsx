@@ -41,7 +41,10 @@ const Navigation: FunctionComponent<Props> = ({cover, description}) => {
         const handleScroll = () => {
             const currentScrollY = window.scrollY;
 
-            if (currentScrollY > lastScrollY) {
+            // Always show navigation in top 50px
+            if (currentScrollY <= 50) {
+                setNavVisible(true);
+            } else if (currentScrollY > lastScrollY) {
                 // Scrolling down
                 setNavVisible(false);
             } else {
