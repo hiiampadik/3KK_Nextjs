@@ -11,7 +11,7 @@
     @include marginVertical;
 
     column-count: 2;
-    column-gap: 10px;
+    column-gap: 16px;
     orphans: 2;
     p {
       @include mono;
@@ -57,7 +57,7 @@
     .cover {
       height: 200px;
       position: relative;
-      border-radius: 10px;
+      border-radius: $bRadius;
       overflow: hidden;
       max-height: calc(100vh - 200px);
       background: #E5FC54;

@@ -54,7 +54,7 @@
 
 .linkContainer {
   flex: 1 1 auto;
-  border-radius: 10px;
+  border-radius: $bRadius;
   display: flex;
   gap: 10px;
   text-decoration: none;
@@ -83,11 +83,10 @@
     .tag {
       width: fit-content;
       margin-bottom: 8px;
-      margin-left: -3px;
       @include mono;
       background-color: #32FE6B;
       padding: 8px 18px;
-      border-radius: 30px;
+      border-radius: $bRadius;
     }
     .description {
       @include mono;
@@ -127,7 +126,7 @@
     align-self: flex-start;
     height: 40px;
 
-    background-image: linear-gradient(90deg, $gray 25%, #E5FC54 50%, $gray 75%) !important;
+    background-image: linear-gradient(90deg, white 25%, #E5FC54 50%, white 75%) !important;
     background-size: 300px 100%;
 
     background-position-x: -250px;
@@ -169,7 +168,7 @@
   width: 400px;
   max-width: 90vw;
   height: auto;
-  border-radius: 10px;
+  border-radius: $bRadius;
   overflow: hidden;
 
   img {

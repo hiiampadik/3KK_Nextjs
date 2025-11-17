@@ -14,7 +14,7 @@
     flex-wrap: wrap;
     gap: 10px;
     button {
-      padding: 15px;
+      padding: 8px 16px;
       @include mono;
       border: 1px $gray solid;
       border-bottom: 1px $black solid;
@@ -22,6 +22,8 @@
       cursor: pointer;
       &.selected{
         border: 1px $black solid;
+        border-radius: 8px;
+        background: white;
       }
       @media (max-width: $breakpoint-xs-max) {
         padding: 5px 6px;
@@ -74,7 +76,7 @@
       .cover {
         flex: 1 1 auto;
         position: relative;
-        border-radius: 10px;
+        border-radius: $bRadius;
         overflow: hidden;
         height: 300px;
         background: darkgrey;

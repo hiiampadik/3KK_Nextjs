@@ -18,19 +18,15 @@ const Footer: FunctionComponent = () => {
     return (
         <div className={styles.footerContainer}>
             <div className={styles.leftContainer}>
-                <div className={styles.socials}>
                     <a href={'https://www.facebook.com/3pluskk'} target={'_blank'}>FB</a>
                     <a href={'https://www.instagram.com/3pluskk/'} target={'_blank'}>IG</a>
-                </div>
-                <div className={styles.telMail}>
                     <a href="mailto:tripluskk@gmail.com">tripluskk@gmail.com</a>
                     <a href="tel:+420777414563">(+420) 777 414 563</a>
-                </div>
             </div>
 
             <div className={styles.rightContainer}>
                 <div>
-                    <p className={styles.sponsors}>
+                    <p className={styles.sectionTitle}>
                         {t('sponsors')}
                     </p>
                     <div className={styles.logos}>
@@ -41,7 +37,7 @@ const Footer: FunctionComponent = () => {
                     </div>
                 </div>
                 <div>
-                    <p className={styles.sponsors}>
+                    <p className={styles.sectionTitle}>
                         {t('partners')}
                     </p>
                     <div className={styles.logos}>
@@ -51,7 +47,7 @@ const Footer: FunctionComponent = () => {
                         <img src={logo4.src}/>
                     </div>
                 </div>
-                <p className={styles.sponsors}>
+                <p className={styles.sectionTitle}>
                     {t('sponsorsBody')}
                 </p>
             </div>
