@@ -17,11 +17,11 @@
       padding: 15px;
       @include mono;
       border: 1px $gray solid;
-      border-bottom: 1px black solid;
+      border-bottom: 1px $black solid;
       background: none;
       cursor: pointer;
       &.selected{
-        border: 1px black solid;
+        border: 1px $black solid;
       }
       @media (max-width: $breakpoint-xs-max) {
         padding: 5px 6px;
@@ -51,6 +51,15 @@
             @include underline;
           }
         }
+
+        @media (hover: hover) {
+          &:hover {
+            img {
+              transform: scale(1.03);
+              filter: grayscale(0%) contrast(100%);
+            }
+          }
+        }
       }
 
 
@@ -78,16 +87,8 @@
           display: block;
           transition: transform 0.3s ease-in-out, filter 0.3s ease-in-out;
           filter: grayscale(100%) contrast(110%);
-        }
+          background: #E5FC54;
 
-        @media (hover: hover) {
-          &:hover {
-            img {
-                transform: scale(1.03);
-              filter: grayscale(0%) contrast(100%);
-            }
-            background: #E5FC54;
-          }
         }
       }
       .cover::after {

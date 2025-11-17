@@ -22,7 +22,8 @@
         "projects": "Projects",
         "archived": "Archive",
         "ongoing": "Ongoing",
-        "planned": "Planned"
+        "planned": "Planned",
+        "author": "Autor:"
     },
 
     "About": {

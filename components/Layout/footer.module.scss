@@ -12,7 +12,7 @@
 
 .footerContainer {
   @include margin;
-  border-top: 1px black solid;
+  border-top: 1px $black solid;
   padding: 20px 0;
   display: flex;
   justify-content: space-between;

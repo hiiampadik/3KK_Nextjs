@@ -11,6 +11,7 @@ $breakpoint-xxl-min: 1400px;
 
 
 $gray: #F8F8F8;
+$black: #171717;
 
 @mixin margin {
   margin: 30px;
@@ -146,7 +147,7 @@ $gray: #F8F8F8;
 
   text-decoration: none;
   border-radius: 30px;
-  border: 1px black solid;
+  border: 1px $black solid;
   padding: 8px 16px;
 
   @media (hover: hover) {

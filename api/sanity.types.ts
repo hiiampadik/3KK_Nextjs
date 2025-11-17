@@ -19,6 +19,12 @@ export type LocalizedText = {
   en?: string
 }
 
+export type Seo = {
+  _type: 'seo'
+  title: LocalizedString
+  paragraph?: LocalizedText
+}
+
 export type Contact = {
   _id: string
   _type: 'contact'
@@ -28,6 +34,12 @@ export type Contact = {
   address: LocalizedRichParagraph
   contacts: LocalizedRichParagraph
   seo: Seo
+}
+
+export type LocalizedRichParagraph = {
+  _type: 'localizedRichParagraph'
+  cs?: BlockRichParagraph
+  en?: BlockRichParagraph
 }
 
 export type About = {
@@ -55,6 +67,28 @@ export type About = {
     _key: string
   }>
   seo: Seo
+}
+
+export type LocalizedString = {
+  _type: 'localizedString'
+  cs?: string
+  en?: string
+}
+
+export type SanityImageCrop = {
+  _type: 'sanity.imageCrop'
+  top: number
+  bottom: number
+  left: number
+  right: number
+}
+
+export type SanityImageHotspot = {
+  _type: 'sanity.imageHotspot'
+  x: number
+  y: number
+  height: number
+  width: number
 }
 
 export type Homepage = {
@@ -136,75 +170,8 @@ export type Project = {
     crop?: SanityImageCrop
     _type: 'image'
   }
-  gallery?: Array<{
-    image: {
-      asset?: {
-        _ref: string
-        _type: 'reference'
-        _weak?: boolean
-        [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
-      }
-      media?: unknown
-      hotspot?: SanityImageHotspot
-      crop?: SanityImageCrop
-      _type: 'image'
-    }
-    alt?: string
-    _key: string
-  }>
+  gallery?: GalleryArray
   seo: Seo
-}
-
-export type Seo = {
-  _type: 'seo'
-  title: LocalizedString
-  paragraph?: LocalizedText
-}
-
-export type LocalizedRichParagraph = {
-  _type: 'localizedRichParagraph'
-  cs?: Array<{
-    children?: Array<{
-      marks?: Array<string>
-      text?: string
-      _type: 'span'
-      _key: string
-    }>
-    style?: 'normal'
-    listItem?: never
-    markDefs?: Array<{
-      href?: string
-      _type: 'link'
-      _key: string
-    }>
-    level?: number
-    _type: 'block'
-    _key: string
-  }>
-  en?: Array<{
-    children?: Array<{
-      marks?: Array<string>
-      text?: string
-      _type: 'span'
-      _key: string
-    }>
-    style?: 'normal'
-    listItem?: never
-    markDefs?: Array<{
-      href?: string
-      _type: 'link'
-      _key: string
-    }>
-    level?: number
-    _type: 'block'
-    _key: string
-  }>
-}
-
-export type LocalizedString = {
-  _type: 'localizedString'
-  cs?: string
-  en?: string
 }
 
 export type GalleryArray = Array<{
@@ -221,8 +188,15 @@ export type GalleryArray = Array<{
     _type: 'image'
   }
   alt?: string
+  author?: string
   _key: string
 }>
+
+export type Slug = {
+  _type: 'slug'
+  current: string
+  source?: string
+}
 
 export type BlockRichParagraph = Array<{
   children?: Array<{
@@ -300,25 +274,20 @@ export type SanityImagePalette = {
 
 export type SanityImageDimensions = {
   _type: 'sanity.imageDimensions'
-  height?: number
-  width?: number
-  aspectRatio?: number
+  height: number
+  width: number
+  aspectRatio: number
 }
 
-export type SanityImageHotspot = {
-  _type: 'sanity.imageHotspot'
-  x?: number
-  y?: number
-  height?: number
-  width?: number
-}
-
-export type SanityImageCrop = {
-  _type: 'sanity.imageCrop'
-  top?: number
-  bottom?: number
-  left?: number
-  right?: number
+export type SanityImageMetadata = {
+  _type: 'sanity.imageMetadata'
+  location?: Geopoint
+  dimensions?: SanityImageDimensions
+  palette?: SanityImagePalette
+  lqip?: string
+  blurHash?: string
+  hasAlpha?: boolean
+  isOpaque?: boolean
 }
 
 export type SanityFileAsset = {
@@ -341,6 +310,13 @@ export type SanityFileAsset = {
   path?: string
   url?: string
   source?: SanityAssetSourceData
+}
+
+export type SanityAssetSourceData = {
+  _type: 'sanity.assetSourceData'
+  name?: string
+  id?: string
+  url?: string
 }
 
 export type SanityImageAsset = {
@@ -366,17 +342,6 @@ export type SanityImageAsset = {
   source?: SanityAssetSourceData
 }
 
-export type SanityImageMetadata = {
-  _type: 'sanity.imageMetadata'
-  location?: Geopoint
-  dimensions?: SanityImageDimensions
-  palette?: SanityImagePalette
-  lqip?: string
-  blurHash?: string
-  hasAlpha?: boolean
-  isOpaque?: boolean
-}
-
 export type Geopoint = {
   _type: 'geopoint'
   lat?: number
@@ -384,41 +349,28 @@ export type Geopoint = {
   alt?: number
 }
 
-export type Slug = {
-  _type: 'slug'
-  current: string
-  source?: string
-}
-
-export type SanityAssetSourceData = {
-  _type: 'sanity.assetSourceData'
-  name?: string
-  id?: string
-  url?: string
-}
-
 export type AllSanitySchemaTypes =
     | LocalizedText
+    | Seo
     | Contact
+    | LocalizedRichParagraph
     | About
+    | LocalizedString
+    | SanityImageCrop
+    | SanityImageHotspot
     | Homepage
     | Project
-    | Seo
-    | LocalizedRichParagraph
-    | LocalizedString
     | GalleryArray
+    | Slug
     | BlockRichParagraph
     | DocumentsArray
     | MediaTag
     | SanityImagePaletteSwatch
     | SanityImagePalette
     | SanityImageDimensions
-    | SanityImageHotspot
-    | SanityImageCrop
-    | SanityFileAsset
-    | SanityImageAsset
     | SanityImageMetadata
-    | Geopoint
-    | Slug
+    | SanityFileAsset
     | SanityAssetSourceData
+    | SanityImageAsset
+    | Geopoint
 export declare const internalGroqTypeReferenceTo: unique symbol

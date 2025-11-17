@@ -10,30 +10,17 @@ import "swiper/css/mousewheel";
 
 import {FreeMode, Mousewheel, Scrollbar} from 'swiper/modules';
 import Figure from '@/components/Sanity/Figure';
-import {internalGroqTypeReferenceTo, SanityImageCrop, SanityImageHotspot} from '@/api/sanity.types';
+import {GalleryArray, internalGroqTypeReferenceTo, SanityImageCrop, SanityImageHotspot} from '@/api/sanity.types';
+import {useTranslations} from 'next-intl';
 
 
 interface GalleryProps {
-  readonly gallery: Array<{
-      image: {
-          asset?: {
-              _ref: string
-              _type: 'reference'
-              _weak?: boolean
-              [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
-          }
-          media?: unknown
-          hotspot?: SanityImageHotspot
-          crop?: SanityImageCrop
-          _type: 'image'
-      }
-      alt?: string
-      _key: string
-  }>
+  readonly gallery: GalleryArray
 }
 
 
 const GallerySwiper: FunctionComponent<GalleryProps> = ({gallery}) => {
+    const t = useTranslations('Projects');
 
     const isDragging = useRef(false);
 
@@ -46,7 +33,6 @@ const GallerySwiper: FunctionComponent<GalleryProps> = ({gallery}) => {
             isDragging.current = false;
         }, 0);
     };
-
 
     return (
         <>
@@ -65,7 +51,10 @@ const GallerySwiper: FunctionComponent<GalleryProps> = ({gallery}) => {
             >
                 {gallery.map((image, index) => (
                     <SwiperSlide key={image._key} className={styles.swiperSlide}>
-                        <GallerySlide image={image.image} galleryImage={true}/>
+                        <GallerySlide image={image.image} galleryImage={true} alt={image.alt}/>
+                        {image.author &&
+                            <p className={styles.imageAuthor}><span>{t('author')}</span> {image.author}</p>
+                        }
                     </SwiperSlide>
                 ))}
             </Swiper>
@@ -88,15 +77,16 @@ interface GallerySlideProps {
         crop?: SanityImageCrop
         _type: 'image'
     }
+    readonly alt?: string
     readonly galleryImage?: boolean
     readonly fullWidth?: boolean
 }
 
-const GallerySlide: FunctionComponent<GallerySlideProps> = ({image, galleryImage, fullWidth}) => {
+const GallerySlide: FunctionComponent<GallerySlideProps> = ({image, galleryImage, fullWidth, alt}) => {
     return (
         <Figure
             image={image}
-            alt={'TODO'}
+            alt={alt}
             galleryImage={galleryImage}
             fullWidth={fullWidth}
         />

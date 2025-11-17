@@ -9,7 +9,7 @@
   font-size: 15px;
   text-rendering: optimizeLegibility;
   line-height: 1.38;
-  color: black;
+  color: $black;
   background: $gray;
 }
 
@@ -21,7 +21,19 @@ body {
   width: 100vw;
   padding: 0;
   margin: 0;
-  color: black;
+  color: $black;
+}
+
+html {
+  ::selection {
+    background: #32FE6B;
+  }
+  ::-moz-selection {
+    background: #32FE6B;
+  }
+  ::-webkit-selection {
+    background: #32FE6B;
+  }
 }
 
 body {
@@ -42,7 +54,7 @@ main {
 }
 
 a {
-  color: black;
+  color: $black;
   @include underline;
   @media (hover: hover) {
     &:hover {
@@ -79,5 +91,5 @@ figure {
 
 
 button {
-  color: black;
+  color: $black;
 }
