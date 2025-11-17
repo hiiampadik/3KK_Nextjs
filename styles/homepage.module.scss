@@ -96,7 +96,9 @@
 
   @media (hover: hover) {
     &:hover {
-      @include underline;
+      h2, .date {
+        @include underline;
+      }
     }
   }
 

@@ -50,7 +50,9 @@
 
         @media (hover: hover) {
           &:hover {
-            @include underline;
+            h2 {
+              @include underline;
+            }
           }
         }
 
