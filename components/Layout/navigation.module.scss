@@ -14,7 +14,6 @@
   }
 }
 
-
 .nav {
   padding: 30px;
   @media (max-width: $breakpoint-sm-max) {
@@ -23,11 +22,11 @@
   @media (max-width: $breakpoint-xs-max) {
     padding: 15px;
   }
-  position: fixed;
+  gap: 20px;
+  position: absolute;
   width: 100vw;
   z-index: 100;
   display: flex;
-  gap: 10px;
   flex-wrap: nowrap;
   align-items: flex-start;
   justify-content: space-between;
@@ -37,50 +36,12 @@
     gap: 6px;
   }
 
-  &.show {
-    .navLeft > *:nth-child(1), .navRight > *:nth-child(1) {
-      transform: translateY(0);
-      transition: transform 0.3s ease-in-out 0s;
-    }
-    .navLeft > *:nth-child(2), .navRight > *:nth-child(2) {
-      transform: translateY(0);
-      transition: transform 0.3s ease-in-out 0.05s;
-    }
-    .navLeft > *:nth-child(3), .navRight > *:nth-child(3) {
-      transform: translateY(0);
-      transition: transform 0.3s ease-in-out 0.1s;
-    }
-    .navLeft > *:nth-child(4), .navRight > *:nth-child(4) {
-      transform: translateY(0);
-      transition: transform 0.3s ease-in-out 0.15s;
-    }
-  }
-
-  &.hidden {
-    .navLeft > *:nth-child(1), .navRight > *:nth-child(1) {
-      transform: translateY(-200px);
-      transition: transform 0.3s ease-in-out 0.0s;
-    }
-    .navLeft > *:nth-child(2), .navRight > *:nth-child(2) {
-      transform: translateY(-200px);
-      transition: transform 0.3s ease-in-out 0.05s;
-    }
-    .navLeft > *:nth-child(3), .navRight > *:nth-child(3) {
-      transform: translateY(-200px);
-      transition: transform 0.3s ease-in-out 0.1s;
-    }
-    .navLeft > *:nth-child(4), .navRight > *:nth-child(4) {
-      transform: translateY(-200px);
-      transition: transform 0.3s ease-in-out 0.15s;
-    }
-  }
-
   .navLeft {
     display: flex;
     gap: 10px;
     flex-wrap: wrap;
     flex: 1 1 auto;
-    align-items: center;
+    align-items: flex-start;
   }
 
   .navRight {
@@ -93,14 +54,13 @@
     @include menuLinkBig;
   }
   .logo {
-    margin-right: 4px;
+    @include menuLinkBig;
+    padding: 12px;
+    height: 40px;
     svg {
-      path {
-        fill: $black;
-      }
-      display: block;
-      width: 12em;
+        height: 26px;
     }
+
   }
   .link1 {
     background: #E5FC54;
@@ -176,7 +136,7 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  height: calc(100vh - 235px);
+  height: calc(100vh - 265px);
   min-height: 400px;
 
   @media (max-width: $breakpoint-sm-max) {
@@ -197,6 +157,7 @@
       object-fit: cover;
       display: block;
       position: absolute;
+
     }
   }
   .cover::after {

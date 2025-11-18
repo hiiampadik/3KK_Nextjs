@@ -1,6 +1,6 @@
 import Matter from 'matter-js';
 
-export const logo = ()=> {
+export const logo = () => {
     if (typeof window === 'undefined') return;
     const matterContainer = window.document.querySelector('#matter-container');
     if (!matterContainer) return;
@@ -8,118 +8,195 @@ export const logo = ()=> {
     const Thickness = 100;
     const w = matterContainer.clientWidth;
     const h = matterContainer.clientHeight;
-    const Engine = Matter.Engine;
-    const Events = Matter.Events;
-    const Render = Matter.Render;
-    const Runner = Matter.Runner;
-    const Bodies = Matter.Bodies;
-    const Common = Matter.Common;
-    const Composite = Matter.Composite;
-    const Composites = Matter.Composites;
+
+    const {
+        Engine,
+        Render,
+        Runner,
+        Bodies,
+        Composite,
+        Mouse,
+        MouseConstraint,
+        Body,
+        Vector,
+    } = Matter;
+
     const engine = Engine.create();
+
+    // Get pixel ratio for retina displays
+    const pixelRatio = window.devicePixelRatio || 1;
+
     const render = Render.create({
         element: matterContainer as HTMLElement,
-        engine: engine,
+        engine,
         options: {
             width: w,
             height: h,
             background: 'transparent',
             wireframes: false,
-            showAngleIndicator: false
+            showAngleIndicator: false,
+            pixelRatio: pixelRatio,
+        },
+    });
+
+// --- KONFIGURACE PÍSMEN (SVG) ---
+// "Design" rozměry – v poměru k tvým SVG
+    const letterConfigs = [
+        { texture: '/matterjs/1.svg', width: 193, height: 126 },
+        { texture: '/matterjs/2.svg', width: 100, height: 100 },
+        { texture: '/matterjs/3.svg', width: 193, height: 126 },
+        { texture: '/matterjs/3.svg', width: 193, height: 126 },
+    ];
+
+// mezera v "design pixelech"
+    const designGap = 0;
+
+// celková designová šířka (písmena + mezery)
+    const totalDesignWidth =
+        letterConfigs.reduce((sum, c) => sum + c.width, 0) +
+        designGap * (letterConfigs.length - 1);
+
+// scale tak, aby to přesně vyplnilo šířku kontejneru
+    const scale = w / totalDesignWidth;
+
+// ze scale dopočítáme skutečnou mezeru
+    const gap = designGap * scale;
+
+// první X – začínáme na úplně levém okraji
+    let currentX = 0;
+
+// výška startu
+    const startY = 80;
+
+// vytvoření písmen
+    const letters = letterConfigs.map((cfg, index) => {
+        const width = cfg.width;
+        const height = cfg.height;
+
+        const x = currentX + width / 2;
+        const y = startY;
+
+        if (index === 1) {
+           return Bodies.circle(x, y, width/2, {
+                density: 0.001,
+                frictionAir: 0.01,
+                restitution: 0.2,
+                friction: 0.01,
+                chamfer: { radius: 5 },
+                render: {
+                    // fillStyle: 'red',
+                    sprite: {
+                        texture: cfg.texture,
+                        xScale: 0.8,
+                        yScale: 0.8,
+                    },
+                },
+            });
+        } else {
+            return Bodies.rectangle(x, y, width, height, {
+                density: 0.001,
+                frictionAir: 0.01,
+                restitution: 0.2,
+                friction: 0.01,
+                chamfer: { radius: 5 },
+                render: {
+                    // fillStyle: 'red',
+                    sprite: {
+                        texture: cfg.texture,
+                        // stejné měřítko jako pro tělo
+                        xScale: 0.8,
+                        yScale: 0.8,
+                    },
+                },
+            });
         }
     });
 
-    const stack = Composites.stack(20, 20, 1, 2, 0, 0, (x: number, y: number)=>{
 
-        return Bodies.rectangle(0, -0, Common.random(100, 250), Common.random(100, 250), {
-            density: 0.001,
-            frictionAir: 0,
-            restitution: 0.2,
-            friction: 0.01,
-            render: {
-                fillStyle: `hsl(${Math.random() * 360}, 50%, 50%)`,
-            }
-        })
+    // --- STĚNY / PODLAHA ---
+    const leftWall = Bodies.rectangle(
+        -Thickness / 2,
+        h / 2,
+        Thickness,
+        h * 5,
+        { isStatic: true, render: { fillStyle: 'rgba(0,0,0,0)' } }
+    );
+    const rightWall = Bodies.rectangle(
+        w + Thickness / 2,
+        h / 2,
+        Thickness,
+        h * 5,
+        { isStatic: true, render: { fillStyle: 'rgba(0,0,0,0)' } }
+    );
+    const ground = Bodies.rectangle(
+        w / 2,
+        h - Thickness / 2,
+        20000,
+        Thickness,
+        { isStatic: true, render: { fillStyle: 'rgba(0,0,0,0)' } }
+    );
+    const top = Bodies.rectangle(
+        w / 2,
+        -Thickness / 2,
+        20000,
+        Thickness,
+        { isStatic: true, render: { fillStyle: 'rgba(0,0,0,0)' } }
+    );
 
-    });
+    Composite.add(engine.world, [ground, leftWall, rightWall, top, ...letters]);
 
-    const leftWall = Bodies.rectangle(- Thickness / 2, h / 2, Thickness, h * 5, {isStatic: true, render: {fillStyle: `rgba(0, 0, 0, 0)`}});
-    const rightWall = Bodies.rectangle(w + Thickness / 2, h / 2, Thickness, h * 5, {isStatic: true, render: {fillStyle: `rgba(0, 0, 0, 0)`}});
-    const ground = Bodies.rectangle(w / 2, h + Thickness / 2, 20000, Thickness, {isStatic: true, render: {fillStyle: `rgba(0, 0, 0, 0)`}});
-    const top = Bodies.rectangle(w / 2, - Thickness / 2, 20000, Thickness, {isStatic: true, render: {fillStyle: `rgba(0, 0, 0, 0)`}});
-
-    // オブジェクトが表示範囲外に出て消えないようにする壁、床を追加
-    Composite.add(engine.world, [ground, leftWall, rightWall, top]);
-
-    // レンダラーを実行する
     Render.run(render);
-
-    // create runner
     const runner = Runner.create();
-
-    // run the engine
     Runner.run(runner, engine);
 
-    function onResize(matterContainer: Element | null) {
+    // --- DRAG & DROP ---
+    const mouse = Mouse.create(render.canvas);
+    const mouseConstraint = MouseConstraint.create(engine, {
+        mouse,
+        constraint: {
+            stiffness: 0.2,
+            render: { visible: false },
+        },
+    });
+    Composite.add(engine.world, mouseConstraint);
+    (render as any).mouse = mouse;
 
-        if (!matterContainer) return;
-        const w = matterContainer.clientWidth;
-        const h = matterContainer.clientHeight;
+    // --- LAYOUT PÍSMEN PŘI RESIZE ---
+    const layoutLetters = (containerWidth: number) => {
+        const totalWidth =
+            letterConfigs.reduce((sum, c) => sum + c.width, 0) +
+            gap * (letterConfigs.length - 1);
+        let cx = containerWidth / 2 - totalWidth / 2;
+
+        letters.forEach((body, i) => {
+            const cfg = letterConfigs[i];
+            const x = cx + cfg.width / 2;
+            const y = body.position.y; // aktuální výška (necháme kde zrovna jsou)
+            cx += cfg.width + gap;
+            Body.setPosition(body, Vector.create(x, y));
+        });
+    };
+
+    function onResize(container: Element | null) {
+        if (!container) return;
+        const w = container.clientWidth;
+        const h = container.clientHeight;
 
         render.canvas.width = w;
         render.canvas.height = h;
 
-        Matter.Body.setPosition(
+        Body.setPosition(
             ground,
-            Matter.Vector.create(
-                w / 2,
-                h + Thickness / 2,
-            )
+            Vector.create(w / 2, h - Thickness / 2)
         );
-
-        // 壁 右を修正
-        Matter.Body.setPosition(
+        Body.setPosition(
             rightWall,
-            Matter.Vector.create(
-                w + Thickness / 2,
-                h / 2,
-            )
+            Vector.create(w + Thickness / 2, h / 2)
         );
 
-        Composite.add(engine.world, stack);
+        layoutLetters(w);
     }
 
-    onResize(matterContainer);
-    window.addEventListener('resize', e=>onResize(matterContainer));
-
-    const mouse = Matter.Mouse.create(render.canvas);
-
-    Events.on(engine, 'beforeUpdate', () => {
-
-        const mousePos = mouse.position;
-
-        stack.bodies.forEach(body => {
-
-            const dx = body.position.x - mousePos.x;
-            const dy = body.position.y - mousePos.y;
-            const distance = Math.sqrt(dx * dx + dy * dy);
-
-            // 矩形のサイズを考慮（最大辺の半分）＋余裕
-            const bounds = body.bounds;
-            const size = Math.max(bounds.max.x - bounds.min.x, bounds.max.y - bounds.min.y);
-            const margin = 0;
-            const effectiveRadius = size / 2 + margin; // marginはカーソルから矩形までの反応余白（値が大きいとカーソルから離れたところで衝突がおこる）
-
-            if (distance < effectiveRadius) {
-
-                const forceMagnitude = 0.008;
-                const force = {
-                    x: dx * forceMagnitude,
-                    y: dy * forceMagnitude,
-                };
-
-                Matter.Body.applyForce(body, body.position, force);
-            }
-        });
-    });
-}
+    layoutLetters(w);
+    window.addEventListener('resize', () => onResize(matterContainer));
+};

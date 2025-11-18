@@ -84,6 +84,7 @@
       width: fit-content;
       margin-bottom: 8px;
       @include mono;
+      @include shadowBox;
       background-color: #32FE6B;
       padding: 8px 18px;
       border-radius: $bRadius;
