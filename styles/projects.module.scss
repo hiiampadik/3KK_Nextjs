@@ -25,10 +25,6 @@
         border-radius: 8px;
         background: white;
       }
-      @media (max-width: $breakpoint-xs-max) {
-        padding: 5px 6px;
-        letter-spacing: -0.2px;
-      }
     }
 
   }
@@ -72,7 +68,7 @@
         margin: 10px 0 5px;
       }
       p {
-        @include mono;
+        @include sans;
         max-width: 400px;
       }
       .cover {

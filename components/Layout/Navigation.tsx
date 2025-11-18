@@ -12,7 +12,7 @@ import {useLocale} from '@/components/utils/useLocale';
 import Figure from '@/components/Sanity/Figure';
 import BlockContent from '@/components/Sanity/BlockContent';
 import {LocalizedRichParagraph} from '@/api/sanity.types';
-
+import {logo} from '@/components/Matter/Logo';
 
 interface Props {
     readonly cover?: { asset?: { _ref: string }};
@@ -25,17 +25,9 @@ const Navigation: FunctionComponent<Props> = ({cover, description}) => {
     const locale = useLocale()
     const t = useTranslations('Navigation');
 
-    const [showOverlay, setShowOverlay] = useState(false);
     const [navVisible, setNavVisible] = useState(true);
     const [lastScrollY, setLastScrollY] = useState(0);
 
-    useEffect(() => {
-        const handleRouteChange = () => {
-            setShowOverlay(false);
-        };
-        router.events.on('routeChangeComplete', handleRouteChange);
-        return () => router.events.off('routeChangeComplete', handleRouteChange);
-    }, [router.events]);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -59,7 +51,9 @@ const Navigation: FunctionComponent<Props> = ({cover, description}) => {
         return () => window.removeEventListener('scroll', handleScroll);
     }, [lastScrollY]);
 
-    useDisableScroll(showOverlay)
+    useEffect(() => {
+        logo();
+    }, []);
 
     return (
         <>
@@ -127,6 +121,8 @@ const Navigation: FunctionComponent<Props> = ({cover, description}) => {
             {cover ?
                 <div className={styles.coverContainer}>
                     <div className={styles.cover}>
+                        <div id="matter-container" className={styles.matterContainer}></div>
+
                         <Figure image={cover} fullWidth={true}/>
                     </div>
                     {description &&
@@ -138,8 +134,6 @@ const Navigation: FunctionComponent<Props> = ({cover, description}) => {
                 :
                 <div className={styles.spacer}/>
             }
-
-            <Overlay handleClose={() => setShowOverlay(false)} isOpen={showOverlay}/>
         </>
     );
 };

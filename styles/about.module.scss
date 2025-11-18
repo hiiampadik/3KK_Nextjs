@@ -14,7 +14,7 @@
     column-gap: 16px;
     orphans: 2;
     p {
-      @include mono;
+      @include sans;
     }
     @media (max-width: $breakpoint-xs-max) {
       column-count: 1;
@@ -36,7 +36,6 @@
       }
       gap: 10px;
       row-gap: 60px;
-      @include mono;
     }
 
     h3 {
@@ -47,6 +46,7 @@
     p {
       text-transform: uppercase;
       letter-spacing: 0.5px;
+      @include mono;
     }
 
     .member {

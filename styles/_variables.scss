@@ -58,8 +58,21 @@ $bRadius: 8px;
 
 @mixin mono {
   font-family: ibm-plex-mono, monospace;
-  font-size: 15px;
+  font-size: 13.5px;
+  line-height: 20px;
+  letter-spacing: 0.05em;
 }
+
+@mixin sans {
+  font-family: "IBM Plex Sans", 'Helvetica', 'Arial', sans-serif;
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 20px;
+  strong {
+    font-weight: 600;
+  }
+}
+
 
 @mixin headline {
   font-family: neue-haas-unica, 'Helvetica', 'Arial', sans-serif;

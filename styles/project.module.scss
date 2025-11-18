@@ -18,16 +18,17 @@
     }
 
     .team {
-      @include mono;
       display: flex;
       flex-direction: column;
       gap: 20px;
       .role {
         text-transform: uppercase;
         letter-spacing: 0.5px;
+        @include mono;
       }
       .name {
         letter-spacing: 1px;
+        @include sans;
       }
     }
     .program {
@@ -35,7 +36,7 @@
       margin-bottom: 40px;
     }
     .abstract {
-      @include mono;
+      @include sans;
     }
   }
 }

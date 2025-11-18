@@ -89,7 +89,7 @@
       border-radius: $bRadius;
     }
     .description {
-      @include mono;
+      @include sans;
       max-width: 500px;
     }
   }
