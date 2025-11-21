@@ -1,6 +1,18 @@
 import { isValidSignature, SIGNATURE_HEADER_NAME } from '@sanity/webhook';
+import { createClient } from 'next-sanity';
 
 const SANITY_WEBHOOK_SECRET = process.env.SANITY_WEBHOOK_SECRET;
+
+const client = createClient({
+    projectId: 'akuo9oaj',
+    dataset: 'production',
+    useCdn: false,
+    apiVersion: '2025-06-20',
+});
+
+async function getAllProjectSlugs() {
+    return client.fetch(`*[_type == "project" && defined(slug.current)][].slug.current`);
+}
 
 export default async function handler(req, res) {
     const signature = req.headers[SIGNATURE_HEADER_NAME];
@@ -29,11 +41,17 @@ export default async function handler(req, res) {
 
                 break;
             case 'homepage':
-                console.log(`===== Revalidating: Homepage`);
-                await Promise.all([
+                console.log(`===== Revalidating: Homepage and all projects`);
+                const projectSlugs = await getAllProjectSlugs();
+                const homepageRevalidations = [
                     res.revalidate(`/en/`),
-                    res.revalidate(`/cs/`)
-                ]);
+                    res.revalidate(`/cs/`),
+                    ...projectSlugs.flatMap(slug => [
+                        res.revalidate(`/en/projects/${slug}`),
+                        res.revalidate(`/cs/projects/${slug}`)
+                    ])
+                ];
+                await Promise.all(homepageRevalidations);
 
                 break
             case 'about':
