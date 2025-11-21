@@ -16,8 +16,6 @@ import Figure from '@/components/Sanity/Figure';
 export default function Home({data}: {data: HomepageType}) {
     const locale = useLocale();
     const t = useTranslations('Homepage');
-    const [hoveredEvent, setHoveredEvent] = useState<typeof program[0] | null>(null);
-    const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
     const program = data.program?.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()) ?? [];
 
@@ -28,10 +26,6 @@ export default function Home({data}: {data: HomepageType}) {
         acc[month].push(event);
         return acc;
     }, {} as Record<string, typeof program>);
-
-    const handleMouseMove = (e: React.MouseEvent) => {
-        setMousePosition({ x: e.clientX, y: e.clientY });
-    };
 
     return (
         <>
@@ -49,11 +43,7 @@ export default function Home({data}: {data: HomepageType}) {
                                     <h2 className={styles.monthHeader}>{month}</h2>
                                     <ul>
                                         {events.map(event => (
-                                            <li key={event._key}
-                                                onMouseEnter={() => setHoveredEvent(event)}
-                                                onMouseLeave={() => setHoveredEvent(null)}
-                                                onMouseMove={handleMouseMove}
-                                            >
+                                            <li key={event._key}>
                                                 <Link href={`/projects/[slug]`}
                                                       as={`/projects/${event.project.slug.current}`}
                                                       key={event.project._id}
@@ -86,6 +76,14 @@ export default function Home({data}: {data: HomepageType}) {
                                                         <a href={event.ticket} className={styles.tickets}>{t('tickets')}</a>
                                                     }
                                                 </div>
+                                                <div className={styles.coverContainer}>
+                                                    {event.project.cover &&
+                                                        <Figure
+                                                            image={event.project.cover}
+                                                            alt={event.project.title[locale]}
+                                                        />
+                                                    }
+                                                </div>
                                             </li>
                                         ))}
                                     </ul>
@@ -96,19 +94,6 @@ export default function Home({data}: {data: HomepageType}) {
                     </div>
                 </div>
             </Layout>
-            {hoveredEvent?.project.cover && (
-                <div
-                    className={styles.hoverCover}
-                    style={{
-                        transform: `translate(calc(${mousePosition.x}px - 50%), ${mousePosition.y + 50}px)`,
-                    }}
-                >
-                    <Figure
-                        image={hoveredEvent.project.cover}
-                        alt={hoveredEvent.project.title[locale]}
-                    />
-                </div>
-            )}
         </>
     );
 }

@@ -16,12 +16,6 @@ export default function Projects({data}: {data: ProjectSanity[]}) {
     const locale = useLocale()
     const [filter, setFilter] = useState<'archived' | 'ongoing' | 'planned'>('ongoing')
 
-    const projects = useMemo(() => {
-        return data
-            .filter(project => project.status === filter && !project.hideInRepertoire)
-            .sort((a, b) => new Date(b.premiere).getTime() - new Date(a.premiere).getTime());
-    }, [filter])
-
 
     const [archivedProjects, ongoingProjects, plannedProjects] = useMemo(() => {
         const archived: ProjectSanity[] = [];
