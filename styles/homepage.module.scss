@@ -24,7 +24,7 @@
     transform: translateY(-50%);
     width: 14px;
     height: 14px;
-    background-color: #32FE6B;
+    background-color: #EFBFFF;
     //background-color: #E5FC54;
     //background-color: $black;
     border-radius: 50%;
@@ -84,8 +84,7 @@
       width: fit-content;
       margin-bottom: 8px;
       @include mono;
-      @include shadowBox;
-      background-color: #32FE6B;
+      background-color: #EFBFFF;
       padding: 8px 18px;
       border-radius: $bRadius;
     }

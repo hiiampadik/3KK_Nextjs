@@ -23,7 +23,8 @@
         "archived": "Archive",
         "ongoing": "Ongoing",
         "planned": "Planned",
-        "author": "Autor:"
+        "author": "Autor:",
+        "noProgram": "We have no reruns coming soon."
     },
 
     "About": {

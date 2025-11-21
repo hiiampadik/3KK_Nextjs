@@ -22,7 +22,9 @@
         "archived": "Archiv",
         "ongoing": "Aktuální",
         "planned": "Připravujeme",
-        "author": "Autor:"
+        "author": "Autor:",
+        "tickets": "Vstupenky",
+        "noProgram": "V nejbližší době neuvádíme žádnou reprízu."
     },
 
     "About": {

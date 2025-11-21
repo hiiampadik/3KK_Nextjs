@@ -1,14 +1,18 @@
 @import '_variables.scss';
 
 .projectContainer {
-  @include margin;
-  max-width: 1000px;
+
   min-height: 300px;
+
+  .projectHeader {
+    @include margin;
+  }
   h1 {
-    @include headline
+    @include headline;
   }
   .projectDetail {
-    @include marginVertical;
+    @include margin;
+    max-width: 1000px;
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 10px;
@@ -37,6 +41,66 @@
     }
     .abstract {
       @include sans;
+    }
+  }
+}
+
+.noReruns {
+  @include marginHorizontal;
+  @include mono;
+  color: #9f9f9f;
+  margin-bottom: 50px !important;
+  margin-top: -10px !important;
+}
+
+.programEvents {
+  width: 100%;
+  @include paddingHorizontal;
+  display: flex;
+  align-items: stretch;
+  gap: 20px;
+  overflow-x: scroll;
+  margin-bottom: 40px;
+
+  .programEvent {
+    border-radius: 20px;
+    background-color: $grayDarker;
+    padding: 12px 20px 20px 20px;
+    display: flex;
+    flex-direction: column;
+
+    .eventDate {
+      @include headline3;
+      margin-bottom: 2px;
+      font-variant-numeric: lining-nums proportional-nums;
+      .eventTag {
+        margin-left: 8px;
+      }
+    }
+    .eventTime, .eventLocation {
+      @include mono;
+    }
+    .eventLocation {
+      flex: 1 1 auto;
+    }
+    .eventLinks {
+      margin-top: 8px;
+      justify-content: flex-end;
+      display: flex;
+      gap: 6px;
+      a {
+        @include outlinedLink;
+
+        align-self: flex-start;
+        height: 40px;
+        background: white;
+
+        @media (hover: hover) {
+          &:hover {
+            @include underline;
+          }
+        }
+      }
     }
   }
 }

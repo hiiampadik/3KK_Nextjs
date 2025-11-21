@@ -16,11 +16,13 @@
     button {
       padding: 8px 16px;
       @include mono;
-      border: 1px $gray solid;
+      border: none;
+      border-top: 1px $gray solid;
       border-bottom: 1px $black solid;
       background: none;
       cursor: pointer;
       &.selected{
+        padding: 8px 15px;
         border: 1px $black solid;
         border-radius: 8px;
         background: white;

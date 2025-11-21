@@ -33,7 +33,6 @@ export default function Home({data}: {data: HomepageType}) {
         setMousePosition({ x: e.clientX, y: e.clientY });
     };
 
-
     return (
         <>
             <Layout
