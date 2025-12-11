@@ -13,6 +13,7 @@ import imageUrlBuilder from '@sanity/image-url';
 import {getImageDimensions} from '@sanity/asset-utils';
 import GallerySwiper from '@/components/Sanity/GallerySwiper';
 import {useTranslations} from 'next-intl';
+import Figure from '@/components/Sanity/Figure';
 
 type ProgramItem = {
     _key: string
@@ -85,17 +86,11 @@ export default function Project({project, programItems}: {project: ProjectSanity
                         </div>
                     }
                     <div>
-                        {/*<div className={styles.program}>*/}
-                        {/*    TODO*/}
-                        {/*</div>*/}
-                        {/*todo poster*/}
                         <div className={styles.abstract}>
                             <BlockContent blocks={project.abstract[locale]}/>
                         </div>
                     </div>
                 </div>
-
-
             </div>
             {project.gallery &&
                 <div className={styles.galleryContainer}>
@@ -103,6 +98,11 @@ export default function Project({project, programItems}: {project: ProjectSanity
                 </div>
             }
 
+            {/*{project.poster &&*/}
+            {/*    <div className={styles.posterContainer}>*/}
+            {/*        <Figure image={project.poster} alt={'poster'} fullWidth={true} />*/}
+            {/*    </div>*/}
+            {/*}*/}
         </Layout>
     )
 }

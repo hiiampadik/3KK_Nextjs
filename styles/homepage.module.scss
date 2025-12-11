@@ -44,7 +44,7 @@
     gap: 12px;
     overflow: hidden;
     &:last-of-type{
-      //border: none;
+      border: none;
     }
 
     @media (hover: hover) {
@@ -203,6 +203,10 @@
   display: flex;
   justify-content: space-between;
   gap: 20px;
+
+  &:last-of-type{
+    border-bottom: 1px $black solid;
+  }
 
   .scrollingPart {
     flex: 1 0 auto;
