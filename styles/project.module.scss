@@ -72,11 +72,16 @@
 
     .eventDate {
       @include headline3;
-      margin-bottom: 2px;
+      margin-bottom: 8px;
       font-variant-numeric: lining-nums proportional-nums;
-      .eventTag {
-        margin-left: 8px;
-      }
+    }
+    .eventTag {
+      width: fit-content;
+      margin-bottom: 8px;
+      @include mono;
+      background-color: #EFBFFF;
+      padding: 8px 18px;
+      border-radius: $bRadius;
     }
     .eventTime, .eventLocation {
       @include mono;

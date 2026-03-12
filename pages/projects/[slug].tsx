@@ -55,9 +55,8 @@ export default function Project({project, programItems}: {project: ProjectSanity
                                 <div key={item._key} className={styles.programEvent}>
                                     <div className={styles.eventDate}>
                                         {localizedDate(item.date, locale)}
-                                        {item.tag && <span className={styles.eventTag}>{item.tag[locale]}</span>}
-
                                     </div>
+                                    {item.tag && <div className={styles.eventTag}>{item.tag[locale]}</div>}
                                     <div className={styles.eventTime}>
                                         {localizedTime(item.date, locale)}
                                     </div>
