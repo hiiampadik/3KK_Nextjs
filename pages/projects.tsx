@@ -10,6 +10,7 @@ import styles from '../styles/projects.module.scss'
 import {useTranslations} from 'next-intl';
 import {useLocale} from '@/components/utils/useLocale';
 import BlockContent from '@/components/Sanity/BlockContent';
+import {classNames} from '@/components/utils/classNames';
 
 export default function Projects({data}: {data: ProjectSanity[]}) {
     const t = useTranslations('Projects');
@@ -80,7 +81,7 @@ export default function Projects({data}: {data: ProjectSanity[]}) {
                             <Link href={`/projects/[slug]`}
                                   as={`/projects/${project.slug.current}`}
                                   key={project._id}>
-                                <div className={styles.cover}>
+                                <div className={classNames([styles.cover, filter === 'archived' && styles.archivedCover])}>
                                     {project.cover &&
                                         <Figure image={project.cover} />
                                     }

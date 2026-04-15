@@ -1,5 +1,5 @@
 import Layout from '../components/Layout';
-import React, {Fragment, useState} from 'react';
+import React, {Fragment} from 'react';
 import {revalidateTime, sanityFetch} from '@/sanity/client';
 import {GetStaticPropsContext} from 'next';
 import {QUERY_HOMEPAGE} from '@/api/homepage';

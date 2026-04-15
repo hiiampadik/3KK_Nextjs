@@ -10,29 +10,21 @@ const client = createClient({
 
 export default client;
 
-// export const revalidate = 172800;
-export const revalidateTime = 180;
+export const revalidateTime = 60 * 60 * 12 // 12 hours
+
 
 export async function sanityFetch<const QueryString extends string>(
     {   query,
         params = {},
-        revalidate = revalidateTime, // two days, // default revalidation time in seconds
         useCdn = true,
-        tags = []
     }: {
     query: QueryString
     params?: QueryParams
     revalidate?: number | false
     useCdn?: boolean
-    tags?: string[]
 }) {
     return client
         .withConfig({useCdn: useCdn})
-        .fetch(query, params, {
-        next: {
-            revalidate: tags.length ? false : revalidate, // for simple, time-based revalidation
-            tags, // for tag-based revalidation
-        },
-    })
+        .fetch(query, params)
 }
 

@@ -88,8 +88,12 @@
           object-fit: cover;
           display: block;
           transition: transform 0.3s ease-in-out, filter 0.3s ease-in-out;
-          filter: grayscale(100%) contrast(110%);
           background: #E5FC54;
+        }
+        &.archivedCover {
+          img {
+            filter: grayscale(100%) contrast(110%);
+          }
 
         }
       }
