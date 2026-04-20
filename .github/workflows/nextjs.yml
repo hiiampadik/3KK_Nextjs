@@ -12,6 +12,10 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+  # Triggered by Sanity webhook
+  repository_dispatch:
+    types: [sanity-update]
+
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
   contents: read
