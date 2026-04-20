@@ -24,6 +24,6 @@ export default function NotFound() {
 export async function getStaticProps(context: GetStaticPropsContext) {
     return {
         props: {
-            messages: (await import(`../public/locales/${context.locale}.json`)).default,
+            messages: (await import(`../public/locales/${context.locale ?? 'cs'}.json`)).default,
         }};
 }

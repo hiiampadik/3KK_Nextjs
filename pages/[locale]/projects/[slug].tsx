@@ -2,11 +2,11 @@ import React from "react";
 import {GetStaticPropsContext} from 'next';
 import client, {revalidateTime, sanityFetch} from '@/sanity/client';
 import Layout from '@/components/Layout';
-import {Project as ProjectSanity} from '../../api/sanity.types'
+import {Project as ProjectSanity} from '@/api/sanity.types'
 import {QUERY_ALL_PROJECTS_SLUGS, QUERY_PROJECT_DETAILS} from '@/api/queries';
 import localizedDate from '@/components/utils/LocalizeDate';
 import localizedTime from '@/components/utils/LocalizeTime';
-import styles from '../../styles/project.module.scss'
+import styles from '@/styles/project.module.scss'
 import {useLocale} from '@/components/utils/useLocale';
 import BlockContent from '@/components/Sanity/BlockContent';
 import imageUrlBuilder from '@sanity/image-url';
@@ -77,7 +77,7 @@ export default function Project({project, programItems}: {project: ProjectSanity
                     {project.team && project.team.length > 0 &&
                         <div className={styles.team}>
                             {project.team.map(member => (
-                                <div className={styles.member}>
+                                <div key={member.name} className={styles.member}>
                                     <p className={styles.role}>{member.role[locale]}{':'}</p>
                                     <p className={styles.name}>{member.name}</p>
                                 </div>
@@ -93,42 +93,39 @@ export default function Project({project, programItems}: {project: ProjectSanity
             </div>
             {project.gallery &&
                 <div className={styles.galleryContainer}>
-                    <GallerySwiper gallery={project.gallery}></GallerySwiper>
+                    <GallerySwiper gallery={project.gallery}/>
                 </div>
             }
-
-            {/*{project.poster &&*/}
-            {/*    <div className={styles.posterContainer}>*/}
-            {/*        <Figure image={project.poster} alt={'poster'} fullWidth={true} />*/}
-            {/*    </div>*/}
-            {/*}*/}
         </Layout>
     )
 }
 
 export async function getStaticPaths() {
     const slugs = await sanityFetch({query: QUERY_ALL_PROJECTS_SLUGS, useCdn: false});
-    const locales = ['cs', 'en'];
     const paths = slugs.flatMap((slug: string) =>
-        locales.map((locale) => ({
-            params: { slug },
-            locale,
+        ['cs', 'en'].map((locale) => ({
+            params: {locale, slug},
         }))
     );
     return {
         paths,
-        fallback: 'blocking',
+        fallback: process.env.GITHUB_PAGES ? false : 'blocking',
     };
 }
 
 export async function getStaticProps(context: GetStaticPropsContext) {
-    const data: ProjectSanity & {programItems?: ProgramItem[]} = await sanityFetch({query: QUERY_PROJECT_DETAILS, params: {slug: context.params?.slug}, useCdn: false});
+    const locale = context.params!.locale as string;
+    const data: ProjectSanity & {programItems?: ProgramItem[]} = await sanityFetch({
+        query: QUERY_PROJECT_DETAILS,
+        params: {slug: context.params?.slug},
+        useCdn: false,
+    });
     return {
         props: {
             project: data,
             programItems: data.programItems || [],
-            messages: (await import(`../../public/locales/${context.locale}.json`)).default,
+            messages: (await import(`../../../public/locales/${locale}.json`)).default,
         },
-        revalidate: revalidateTime, // two days
+        ...(!process.env.GITHUB_PAGES && {revalidate: revalidateTime}),
     };
 }

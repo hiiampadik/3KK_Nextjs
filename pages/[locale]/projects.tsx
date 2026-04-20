@@ -3,10 +3,10 @@ import Layout from '@/components/Layout';
 import {GetStaticPropsContext} from 'next';
 import {revalidateTime, sanityFetch} from '@/sanity/client';
 import Link from 'next/link';
-import {Project as ProjectSanity} from '../api/sanity.types'
+import {Project as ProjectSanity} from '@/api/sanity.types'
 import {QUERY_ALL_PROJECTS} from '@/api/queries';
 import Figure from '@/components/Sanity/Figure';
-import styles from '../styles/projects.module.scss'
+import styles from '@/styles/projects.module.scss'
 import {useTranslations} from 'next-intl';
 import {useLocale} from '@/components/utils/useLocale';
 import BlockContent from '@/components/Sanity/BlockContent';
@@ -16,7 +16,6 @@ export default function Projects({data}: {data: ProjectSanity[]}) {
     const t = useTranslations('Projects');
     const locale = useLocale()
     const [filter, setFilter] = useState<'archived' | 'ongoing' | 'planned'>('ongoing')
-
 
     const [archivedProjects, ongoingProjects, plannedProjects] = useMemo(() => {
         const archived: ProjectSanity[] = [];
@@ -46,14 +45,10 @@ export default function Projects({data}: {data: ProjectSanity[]}) {
 
     const getProjectsToDisplay = () => {
         switch (filter) {
-            case 'archived':
-                return archivedProjects;
-            case 'ongoing':
-                return ongoingProjects;
-            case 'planned':
-                return plannedProjects;
-            default:
-                return [];
+            case 'archived': return archivedProjects;
+            case 'ongoing': return ongoingProjects;
+            case 'planned': return plannedProjects;
+            default: return [];
         }
     }
 
@@ -78,16 +73,14 @@ export default function Projects({data}: {data: ProjectSanity[]}) {
                 <ul className={styles.projectsList}>
                     {getProjectsToDisplay().map(project => (
                         <li key={project._id}>
-                            <Link href={`/projects/[slug]`}
-                                  as={`/projects/${project.slug.current}`}
-                                  key={project._id}>
+                            <Link href={`/${locale}/projects/${project.slug.current}`} key={project._id}>
                                 <div className={classNames([styles.cover, filter === 'archived' && styles.archivedCover])}>
                                     {project.cover &&
-                                        <Figure image={project.cover} />
+                                        <Figure image={project.cover}/>
                                     }
                                 </div>
                                 <h2>{project.title[locale]}</h2>
-                                <BlockContent blocks={project.description[locale]} />
+                                <BlockContent blocks={project.description[locale]}/>
                             </Link>
                         </li>
                     ))}
@@ -97,14 +90,25 @@ export default function Projects({data}: {data: ProjectSanity[]}) {
     );
 }
 
+export function getStaticPaths() {
+    return {
+        paths: [
+            {params: {locale: 'cs'}},
+            {params: {locale: 'en'}},
+        ],
+        fallback: false,
+    };
+}
+
 export async function getStaticProps(context: GetStaticPropsContext) {
+    const locale = context.params!.locale as string;
     const data: ProjectSanity[] = await sanityFetch({query: QUERY_ALL_PROJECTS, useCdn: false});
 
     return {
         props: {
             data,
-            messages: (await import(`../public/locales/${context.locale}.json`)).default,
+            messages: (await import(`../../public/locales/${locale}.json`)).default,
         },
-        revalidate: revalidateTime, // two days
+        ...(!process.env.GITHUB_PAGES && {revalidate: revalidateTime}),
     };
 }

@@ -1,10 +1,10 @@
-import Layout from '../components/Layout';
+import Layout from '@/components/Layout';
 import React from 'react';
 import {revalidateTime, sanityFetch} from '@/sanity/client';
 import {GetStaticPropsContext} from 'next';
 import {QUERY_ABOUT} from '@/api/queries';
-import {About as AboutSanity} from '../api/sanity.types'
-import styles from '../styles/about.module.scss'
+import {About as AboutSanity} from '@/api/sanity.types'
+import styles from '@/styles/about.module.scss'
 import {useTranslations} from 'next-intl';
 import BlockContent from '@/components/Sanity/BlockContent';
 import {useLocale} from '@/components/utils/useLocale';
@@ -43,14 +43,25 @@ export default function About({data}: {data: AboutSanity}) {
     );
 }
 
+export function getStaticPaths() {
+    return {
+        paths: [
+            {params: {locale: 'cs'}},
+            {params: {locale: 'en'}},
+        ],
+        fallback: false,
+    };
+}
+
 export async function getStaticProps(context: GetStaticPropsContext) {
+    const locale = context.params!.locale as string;
     const data: AboutSanity = await sanityFetch({query: QUERY_ABOUT, useCdn: false});
 
     return {
         props: {
             data,
-            messages: (await import(`../public/locales/${context.locale}.json`)).default,
+            messages: (await import(`../../public/locales/${locale}.json`)).default,
         },
-        revalidate: revalidateTime, // two days
+        ...(!process.env.GITHUB_PAGES && {revalidate: revalidateTime}),
     };
 }

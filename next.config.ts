@@ -20,12 +20,6 @@ const nextConfig: NextConfig = {
             ],
         },
     }),
-    ...(!isGithubPages && {
-        i18n: {
-            defaultLocale: 'cs',
-            locales: ['en', 'cs'],
-        },
-    }),
     logging: {
         fetches: {
             fullUrl: true,

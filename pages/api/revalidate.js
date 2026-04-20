@@ -35,8 +35,8 @@ export default async function handler(req, res) {
                 await Promise.all([
                     res.revalidate(`/en/projects/${slug}`),
                     res.revalidate(`/cs/projects/${slug}`),
-                    res.revalidate(`/en/`),
-                    res.revalidate(`/cs/`)
+                    res.revalidate(`/en`),
+                    res.revalidate(`/cs`)
                 ]);
 
                 break;
@@ -44,8 +44,8 @@ export default async function handler(req, res) {
                 console.log(`===== Revalidating: Homepage and all projects`);
                 const projectSlugs = await getAllProjectSlugs();
                 const homepageRevalidations = [
-                    res.revalidate(`/en/`),
-                    res.revalidate(`/cs/`),
+                    res.revalidate(`/en`),
+                    res.revalidate(`/cs`),
                     ...projectSlugs.flatMap(slug => [
                         res.revalidate(`/en/projects/${slug}`),
                         res.revalidate(`/cs/projects/${slug}`)

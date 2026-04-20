@@ -41,7 +41,7 @@ const MyApp: FunctionComponent<AppProps> = ({ Component, router, pageProps }) =>
           `}
             </Script>
             <NextIntlClientProvider
-                locale={router.locale}
+                locale={(router.query.locale as string) ?? 'cs'}
                 timeZone="Europe/Vienna"
                 messages={pageProps.messages}
                 onError={(error) => {
