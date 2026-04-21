@@ -89,21 +89,22 @@ const Layout: FunctionComponent<PropsWithChildren<LayoutProps>> = (
         ]
     }
 
+    const strippedPath = router.asPath.replace(/^\/(cs|en)/, '') || '/'
     const alternateUrls = {
-        cs: router.asPath.replace(/^\/en/, '') || '/',
-        en: '/en' + (router.asPath.replace(/^\/en/, '') || '/'),
+        cs: '/cs' + strippedPath,
+        en: '/en' + strippedPath,
     }
 
 
     return (
         <>
             <Head>
-                <title>{pageTitle}</title>
+                <title>{seoPageTitle}</title>
 
                 <meta name="viewport" content="width=device-width, initial-scale=1"/>
                 <meta name="keywords"
                       content="divadlo, kritické divadlo, 3+kk, theatre 3+kk, site-specific, kultura, Brno, Praha"/>
-                <meta name="description" content={websiteDescription}/>
+                <meta name="description" content={seoPageDescription}/>
                 <meta name="robots" content="index, follow"/>
                 <meta charSet="utf-8"/>
                 <meta name="theme-color" content="#000000"/>
