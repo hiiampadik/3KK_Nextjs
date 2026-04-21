@@ -77,6 +77,8 @@ jobs:
         run: ${{ steps.detect-package-manager.outputs.runner }} next build
         env:
           GITHUB_PAGES: true
+      - name: Generate sitemap
+        run: ${{ steps.detect-package-manager.outputs.runner }} next-sitemap
       - name: Add .nojekyll
         run: touch ./out/.nojekyll
       - name: Upload artifact
