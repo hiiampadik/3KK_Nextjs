@@ -2,17 +2,17 @@ import {useEffect} from 'react';
 import {useRouter} from 'next/router';
 import Head from 'next/head';
 
-export default function RootRedirect() {
+export default function ProjectsRedirect() {
     const router = useRouter();
 
     useEffect(() => {
-        router.replace('/cs');
+        router.replace('/cs/projects');
     }, [router]);
 
     return (
         <Head>
-            <meta httpEquiv="refresh" content="0;url=/cs"/>
-            <link rel="canonical" href="https://www.tripluskk.com/cs"/>
+            <meta httpEquiv="refresh" content="0;url=/cs/projects"/>
+            <link rel="canonical" href="https://www.tripluskk.com/cs/projects"/>
         </Head>
     );
 }
