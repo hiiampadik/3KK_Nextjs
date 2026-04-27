@@ -11,6 +11,11 @@ const nextConfig: NextConfig = {
                 permanent: true,
             },
             {
+                source: '/:locale(cs|en)/',
+                destination: '/:locale',
+                permanent: true,
+            },
+            {
                 source: '/projects/:slug',
                 destination: '/cs/projects/:slug',
                 permanent: true,
