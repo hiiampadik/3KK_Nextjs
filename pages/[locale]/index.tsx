@@ -63,7 +63,7 @@ export default function Home({data}: {data: HomepageType}) {
                                                         </h2>
                                                         {event.tag && <div className={styles.tag}>{event.tag[locale]}</div>}
                                                         <div className={styles.description}>
-                                                            <BlockContent blocks={event.project.description[locale]}/>
+                                                            <BlockContent blocks={event.project.description[locale]} disableLinks/>
                                                         </div>
                                                     </div>
                                                 </Link>
@@ -113,6 +113,7 @@ export async function getStaticProps(context: GetStaticPropsContext) {
     return {
         props: {
             data,
+            locale,
             messages: (await import(`../../public/locales/${locale}.json`)).default,
         },
         ...(!process.env.GITHUB_PAGES && {revalidate: revalidateTime}),

@@ -80,7 +80,7 @@ export default function Projects({data}: {data: ProjectSanity[]}) {
                                     }
                                 </div>
                                 <h2>{project.title[locale]}</h2>
-                                <BlockContent blocks={project.description[locale]}/>
+                                <BlockContent blocks={project.description[locale]} disableLinks/>
                             </Link>
                         </li>
                     ))}
@@ -107,6 +107,7 @@ export async function getStaticProps(context: GetStaticPropsContext) {
     return {
         props: {
             data,
+            locale,
             messages: (await import(`../../public/locales/${locale}.json`)).default,
         },
         ...(!process.env.GITHUB_PAGES && {revalidate: revalidateTime}),

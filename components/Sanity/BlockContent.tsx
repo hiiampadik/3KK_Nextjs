@@ -28,7 +28,7 @@ const components: PortableTextComponents = {
   marks: {
     link: ({ children, value }: { children?: ReactNode; value?: LinkValue }) => {
       if (!value?.href) {
-        return <>{children}</>; // If no href is provided, just render the children
+        return <>{children}</>;
       }
       return (
           <Link href={value.href}
@@ -42,12 +42,23 @@ const components: PortableTextComponents = {
   },
 };
 
+const plainComponents: PortableTextComponents = {
+  ...components,
+  marks: {
+    ...components.marks,
+    link: ({ children }: { children?: ReactNode }) => {
+      return <span>{children}</span>;
+    },
+  },
+};
+
 interface BlockContentProps {
   readonly blocks?: any;
+  readonly disableLinks?: boolean;
 }
 
-const BlockContent: FunctionComponent<BlockContentProps> = ({ blocks }) => {
-  return <PortableText value={blocks} components={components} />;
+const BlockContent: FunctionComponent<BlockContentProps> = ({ blocks, disableLinks }) => {
+  return <PortableText value={blocks} components={disableLinks ? plainComponents : components} />;
 };
 
 export default BlockContent;

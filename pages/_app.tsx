@@ -5,8 +5,10 @@ import {OverlaysProvider} from '@blueprintjs/core';
 import Script from 'next/script';
 import * as gtag from "../lib/gtag";
 import {IntlErrorCode, NextIntlClientProvider} from 'next-intl';
+import {Locale, LocaleContext} from '@/components/utils/useLocale';
 
 const MyApp: FunctionComponent<AppProps> = ({ Component, router, pageProps }) => {
+    const locale: Locale = pageProps.locale ?? (router.query.locale as Locale) ?? 'cs';
 
     useEffect(() => {
         const handleRouteChange = (url: string) => {
@@ -40,20 +42,22 @@ const MyApp: FunctionComponent<AppProps> = ({ Component, router, pageProps }) =>
               });
           `}
             </Script>
-            <NextIntlClientProvider
-                locale={(router.query.locale as string) ?? 'cs'}
-                timeZone="Europe/Vienna"
-                messages={pageProps.messages}
-                onError={(error) => {
-                    if (error.code === IntlErrorCode.MISSING_MESSAGE) {
-                        console.warn('Missing translation:', error.name);
-                    }
-                }}
-            >
-                <OverlaysProvider>
-                    <Component key={router.route} {...pageProps} />
-                </OverlaysProvider>
-            </NextIntlClientProvider>
+            <LocaleContext.Provider value={locale}>
+                <NextIntlClientProvider
+                    locale={locale}
+                    timeZone="Europe/Vienna"
+                    messages={pageProps.messages}
+                    onError={(error) => {
+                        if (error.code === IntlErrorCode.MISSING_MESSAGE) {
+                            console.warn('Missing translation:', error.name);
+                        }
+                    }}
+                >
+                    <OverlaysProvider>
+                        <Component key={router.route} {...pageProps} />
+                    </OverlaysProvider>
+                </NextIntlClientProvider>
+            </LocaleContext.Provider>
         </>
         )
 

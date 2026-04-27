@@ -1,8 +1,9 @@
-import {useRouter} from 'next/router';
+import {createContext, useContext} from 'react';
 
-export const useLocale = (): ('cs' | 'en') => {
-    const router = useRouter();
-    const locale = router.query.locale;
-    if (locale === 'en') return 'en';
-    return 'cs';
+export type Locale = 'cs' | 'en';
+
+export const LocaleContext = createContext<Locale>('cs');
+
+export const useLocale = (): Locale => {
+    return useContext(LocaleContext);
 }

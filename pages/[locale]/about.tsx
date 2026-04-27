@@ -60,6 +60,7 @@ export async function getStaticProps(context: GetStaticPropsContext) {
     return {
         props: {
             data,
+            locale,
             messages: (await import(`../../public/locales/${locale}.json`)).default,
         },
         ...(!process.env.GITHUB_PAGES && {revalidate: revalidateTime}),
