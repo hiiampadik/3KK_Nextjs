@@ -118,7 +118,7 @@ const Layout: FunctionComponent<PropsWithChildren<LayoutProps>> = (
 
                 <link rel="alternate" href={WEBSITE_URL + alternateUrls.cs} hrefLang="cs"/>
                 <link rel="alternate" href={WEBSITE_URL + alternateUrls.en} hrefLang="en"/>
-                <link rel="alternate" href={WEBSITE_URL} hrefLang="x-default"/>
+                <link rel="alternate" href={WEBSITE_URL + '/cs'} hrefLang="x-default"/>
 
                 <link rel="canonical" href={currentUrl}/>
 
