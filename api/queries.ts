@@ -9,6 +9,14 @@ export const QUERY_ABOUT = defineQuery(`*[_type == 'about'][0]{...}`)
 export const QUERY_PROJECT_DETAILS = defineQuery(`
   *[_type == "project" && slug.current == $slug][0] {
     ...,
+    items[]{
+      _key,
+      title,
+      "url": document.asset->url,
+      "extension": document.asset->extension,
+      "size": document.asset->size,
+      "originalFilename": document.asset->originalFilename
+    },
     "programItems": *[_type == "homepage"][0].program[references(^._id)]
   }
 `)

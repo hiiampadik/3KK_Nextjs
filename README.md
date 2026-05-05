@@ -73,8 +73,13 @@ Next.js built-in `i18n` config requires a server to handle locale redirects. Rem
 
 ```
 pages/
-  index.tsx               ← redirects to /cs
+  index.tsx               ← redirects to /cs (client-side, for GitHub Pages)
+  about.tsx               ← redirects to /cs/about
+  contact.tsx             ← redirects to /cs/contact
   404.tsx
+  projects/
+    index.tsx             ← redirects to /cs/projects
+    [slug].tsx            ← redirects to /cs/projects/[slug]
   [locale]/
     index.tsx
     about.tsx
@@ -103,7 +108,8 @@ export default function RootRedirect() {
 
     return (
         <Head>
-            <meta httpEquiv="refresh" content="0;url=cs"/>
+            <meta httpEquiv="refresh" content="0;url=/cs"/>
+            <link rel="canonical" href="https://www.tripluskk.com/cs"/>
         </Head>
     );
 }
@@ -112,6 +118,36 @@ export function getStaticProps() {
     return {props: {}};
 }
 ```
+
+**Legacy URL redirects** — create redirect pages for non-localized URLs (`/projects`, `/about`, `/contact`) that Google or users might visit. Each page does a client-side redirect to the `/cs/...` version and sets the correct canonical:
+
+```tsx
+// pages/about.tsx (same pattern for contact.tsx, projects/index.tsx)
+import {useEffect} from 'react';
+import {useRouter} from 'next/router';
+import Head from 'next/head';
+
+export default function AboutRedirect() {
+    const router = useRouter();
+
+    useEffect(() => {
+        router.replace('/cs/about');
+    }, [router]);
+
+    return (
+        <Head>
+            <meta httpEquiv="refresh" content="0;url=/cs/about"/>
+            <link rel="canonical" href="https://www.tripluskk.com/cs/about"/>
+        </Head>
+    );
+}
+
+export function getStaticProps() {
+    return {props: {}};
+}
+```
+
+For dynamic routes like `pages/projects/[slug].tsx`, fetch all slugs in `getStaticPaths` so a redirect page is generated for each.
 
 **Every locale page (`pages/[locale]/about.tsx` etc.):**
 
@@ -191,6 +227,62 @@ const otherLocale = locale === 'cs' ? 'en' : 'cs';
 const switchPath = router.asPath.replace(/^\/(cs|en)/, `/${otherLocale}`);
 <Link href={switchPath}>{locale === 'cs' ? 'En' : 'Cz'}</Link>
 ```
+
+### SEO: Canonical URLs and hreflang
+
+GitHub Pages can't do server-side 301 redirects, so SEO for multilingual sites needs extra care.
+
+**Canonical tags** — every page must declare `<link rel="canonical">` pointing to itself. Redirect pages (root `/`, legacy URLs) must set their canonical to the target URL, not themselves. Otherwise Google picks the simpler URL as canonical.
+
+```tsx
+// In Layout component — self-referencing canonical for real pages
+const currentUrl = WEBSITE_URL + router.asPath;
+<link rel="canonical" href={currentUrl}/>
+```
+
+**hreflang alternate links** — declare all language versions + `x-default`:
+
+```tsx
+const strippedPath = router.asPath.replace(/^\/(cs|en)/, '') || '/'
+const alternateUrls = {
+    cs: '/cs' + strippedPath,
+    en: '/en' + strippedPath,
+}
+
+<link rel="alternate" href={WEBSITE_URL + alternateUrls.cs} hrefLang="cs"/>
+<link rel="alternate" href={WEBSITE_URL + alternateUrls.en} hrefLang="en"/>
+<link rel="alternate" href={WEBSITE_URL + '/cs'} hrefLang="x-default"/>
+```
+
+> **`x-default`** should point to your default locale (`/cs`), not the root `/`. If it points to `/` (a redirect page), Google sees conflicting signals — the root says "I'm the default" but also redirects elsewhere.
+
+**Key rules:**
+- Root `/` must have `<link rel="canonical" href=".../cs"/>` (not self-referencing)
+- Legacy redirect pages (`/projects`, `/about`) must have canonical pointing to `/cs/...` target
+- `x-default` hreflang must point to the default locale path, not a redirect page
+- Don't include redirect URLs in the sitemap — only include real localized URLs (`/cs/...`, `/en/...`)
+
+### Trailing-slash redirects on GitHub Pages
+
+With `trailingSlash: false` (default), Next.js static export generates `out/cs.html` for the `/cs` route. But because subpages exist (`/cs/about`, `/cs/projects`), a `out/cs/` directory also exists. When someone visits `/cs/`, GitHub Pages looks for `cs/index.html` — which doesn't exist — and returns 404.
+
+Fix this with a post-build step in the workflow that creates redirect `index.html` files:
+
+```yaml
+- name: Add trailing-slash redirects
+  run: |
+    find ./out -name '*.html' ! -name 'index.html' ! -name '404.html' | while read file; do
+      dir="${file%.html}"
+      target="/${dir#./out/}"
+      if [ -d "$dir" ]; then
+        if [ ! -f "$dir/index.html" ]; then
+          echo "<!DOCTYPE html><html><head><link rel=\"canonical\" href=\"https://www.your-domain.com${target}\"/><meta http-equiv=\"refresh\" content=\"0;url=${target}\"/></head></html>" > "$dir/index.html"
+        fi
+      fi
+    done
+```
+
+This finds cases where both `out/X.html` and `out/X/` exist (but no `out/X/index.html`), and creates a redirect page. Result: `/cs/` redirects to `/cs`, `/cs/projects/` redirects to `/cs/projects`, etc.
 
 ### Remove server-only pages before build
 
@@ -299,6 +391,18 @@ jobs:
       - name: Generate sitemap
         run: ${{ steps.detect-package-manager.outputs.runner }} next-sitemap
 
+      - name: Add trailing-slash redirects
+        run: |
+          find ./out -name '*.html' ! -name 'index.html' ! -name '404.html' | while read file; do
+            dir="${file%.html}"
+            target="/${dir#./out/}"
+            if [ -d "$dir" ]; then
+              if [ ! -f "$dir/index.html" ]; then
+                echo "<!DOCTYPE html><html><head><link rel=\"canonical\" href=\"https://www.your-domain.com${target}\"/><meta http-equiv=\"refresh\" content=\"0;url=${target}\"/></head></html>" > "$dir/index.html"
+              fi
+            fi
+          done
+
       # Required to prevent GitHub Pages from processing files with Jekyll
       - name: Add .nojekyll
         run: touch ./out/.nojekyll
@@ -336,3 +440,7 @@ jobs:
 | `revalidate` error | ISR unsupported in static export | Disable with `...(!process.env.GITHUB_PAGES && { revalidate: N })` |
 | Images broken | Remote image optimization requires a server | Use `images: { unoptimized: true }` for GitHub Pages builds |
 | Links broken with basePath | Internal links don't include basePath automatically in some cases | Verify all `<Link>` hrefs — Next.js should prepend basePath automatically |
+| Google picks wrong canonical (`/` instead of `/cs`) | Root redirect page has self-referencing canonical; `x-default` points to `/` | Set canonical on `/` to `/cs`; point `x-default` hreflang to `/cs` |
+| `/cs/` returns 404 | `out/cs/` directory exists but has no `index.html` | Add trailing-slash redirect build step (see above) |
+| `redirects()` not working on production | `output: 'export'` ignores `redirects()` — they only work with a Node.js server | Use HTML redirect pages (`meta http-equiv="refresh"`) instead |
+| Legacy URLs (`/projects`, `/about`) return 404 | No pages exist at those paths — only at `/cs/projects`, `/cs/about` | Create redirect pages at `pages/projects.tsx`, `pages/about.tsx` etc. |

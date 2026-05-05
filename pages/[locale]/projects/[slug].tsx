@@ -14,6 +14,22 @@ import {getImageDimensions} from '@sanity/asset-utils';
 import GallerySwiper from '@/components/Sanity/GallerySwiper';
 import {useTranslations} from 'next-intl';
 import Figure from '@/components/Sanity/Figure';
+import Image from 'next/image';
+
+type DocumentItem = {
+    _key: string
+    title: string
+    url: string
+    extension: string
+    size: number
+    originalFilename: string
+}
+
+function formatFileSize(bytes: number): string {
+    if (bytes < 1024) return `${bytes} B`
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} kB`
+    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
+}
 
 type ProgramItem = {
     _key: string
@@ -24,7 +40,7 @@ type ProgramItem = {
     tag?: {cs: string, en: string}
 }
 
-export default function Project({project, programItems}: {project: ProjectSanity, programItems?: ProgramItem[]}) {
+export default function Project({project, programItems, documents}: {project: ProjectSanity, programItems?: ProgramItem[], documents?: DocumentItem[]}) {
     const locale = useLocale()
     const builder = imageUrlBuilder(client);
     const coverDimensions = project.cover?.asset && getImageDimensions(project.cover.asset)
@@ -74,16 +90,29 @@ export default function Project({project, programItems}: {project: ProjectSanity
                         </div>
                 )}
                 <div className={styles.projectDetail}>
-                    {project.team && project.team.length > 0 &&
-                        <div className={styles.team}>
-                            {project.team.map(member => (
-                                <div key={member.name} className={styles.member}>
-                                    <p className={styles.role}>{member.role[locale]}{':'}</p>
-                                    <p className={styles.name}>{member.name}</p>
-                                </div>
-                            ))}
-                        </div>
-                    }
+                    <div className={styles.leftColumn}>
+                        {documents && documents.length > 0 &&
+                            <div className={styles.documents}>
+                                <p className={styles.documentsTitle}>{t('downloads')}{':'}</p>
+                                {documents.map(doc => (
+                                    <a key={doc._key} href={doc.url} target="_blank" rel="noopener noreferrer" className={styles.document}>
+                                        <Image src="/file.svg" alt="" width={16} height={16} />
+                                        <span>{doc.title}.{doc.extension}</span>
+                                    </a>
+                                ))}
+                            </div>
+                        }
+                        {project.team && project.team.length > 0 &&
+                            <div className={styles.team}>
+                                {project.team.map(member => (
+                                    <div key={member.name} className={styles.member}>
+                                        <p className={styles.role}>{member.role[locale]}{':'}</p>
+                                        <p className={styles.name}>{member.name}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        }
+                    </div>
                     <div>
                         <div className={styles.abstract}>
                             <BlockContent blocks={project.abstract[locale]}/>
@@ -115,7 +144,7 @@ export async function getStaticPaths() {
 
 export async function getStaticProps(context: GetStaticPropsContext) {
     const locale = context.params!.locale as string;
-    const data: ProjectSanity & {programItems?: ProgramItem[]} = await sanityFetch({
+    const data: ProjectSanity & {programItems?: ProgramItem[], items?: DocumentItem[]} = await sanityFetch({
         query: QUERY_PROJECT_DETAILS,
         params: {slug: context.params?.slug},
         useCdn: false,
@@ -124,6 +153,7 @@ export async function getStaticProps(context: GetStaticPropsContext) {
         props: {
             project: data,
             programItems: data.programItems || [],
+            documents: data.items || [],
             locale,
             messages: (await import(`../../../public/locales/${locale}.json`)).default,
         },

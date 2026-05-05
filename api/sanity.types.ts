@@ -146,6 +146,20 @@ export type Project = {
     role: LocalizedString
     _key: string
   }>
+  items?: Array<{
+    document: {
+      asset: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'sanity.fileAsset'
+      }
+      media?: unknown
+      _type: 'file'
+    }
+    title: string
+    _key: string
+  }>
   cover?: {
     asset?: {
       _ref: string
@@ -350,27 +364,27 @@ export type Geopoint = {
 }
 
 export type AllSanitySchemaTypes =
-    | LocalizedText
-    | Seo
-    | Contact
-    | LocalizedRichParagraph
-    | About
-    | LocalizedString
-    | SanityImageCrop
-    | SanityImageHotspot
-    | Homepage
-    | Project
-    | GalleryArray
-    | Slug
-    | BlockRichParagraph
-    | DocumentsArray
-    | MediaTag
-    | SanityImagePaletteSwatch
-    | SanityImagePalette
-    | SanityImageDimensions
-    | SanityImageMetadata
-    | SanityFileAsset
-    | SanityAssetSourceData
-    | SanityImageAsset
-    | Geopoint
+  | LocalizedText
+  | Seo
+  | Contact
+  | LocalizedRichParagraph
+  | About
+  | LocalizedString
+  | SanityImageCrop
+  | SanityImageHotspot
+  | Homepage
+  | Project
+  | GalleryArray
+  | Slug
+  | BlockRichParagraph
+  | DocumentsArray
+  | MediaTag
+  | SanityImagePaletteSwatch
+  | SanityImagePalette
+  | SanityImageDimensions
+  | SanityImageMetadata
+  | SanityFileAsset
+  | SanityAssetSourceData
+  | SanityImageAsset
+  | Geopoint
 export declare const internalGroqTypeReferenceTo: unique symbol
