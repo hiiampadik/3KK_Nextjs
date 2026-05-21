@@ -91,17 +91,6 @@ export default function Project({project, programItems, documents}: {project: Pr
                 )}
                 <div className={styles.projectDetail}>
                     <div className={styles.leftColumn}>
-                        {documents && documents.length > 0 &&
-                            <div className={styles.documents}>
-                                <p className={styles.documentsTitle}>{t('downloads')}{':'}</p>
-                                {documents.map(doc => (
-                                    <a key={doc._key} href={doc.url} target="_blank" rel="noopener noreferrer" className={styles.document}>
-                                        <Image src="/file.svg" alt="" width={16} height={16} />
-                                        <span>{doc.title}.{doc.extension}</span>
-                                    </a>
-                                ))}
-                            </div>
-                        }
                         {project.team && project.team.length > 0 &&
                             <div className={styles.team}>
                                 {project.team.map(member => (
@@ -117,6 +106,17 @@ export default function Project({project, programItems, documents}: {project: Pr
                         <div className={styles.abstract}>
                             <BlockContent blocks={project.abstract[locale]}/>
                         </div>
+                        {documents && documents.length > 0 &&
+                            <div className={styles.documents}>
+                                <p className={styles.documentsTitle}>{t('downloads')}{':'}</p>
+                                {documents.map(doc => (
+                                    <a key={doc._key} href={doc.url} target="_blank" rel="noopener noreferrer" className={styles.document}>
+                                        <Image src="/file.svg" alt="" width={16} height={16} />
+                                        <span>{doc.title}.{doc.extension}</span>
+                                    </a>
+                                ))}
+                            </div>
+                        }
                     </div>
                 </div>
             </div>

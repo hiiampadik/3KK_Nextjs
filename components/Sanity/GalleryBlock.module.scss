@@ -14,11 +14,10 @@
     width: auto !important;
 
     .imageAuthor {
-      font-size: 12px;
+      @include sans;
       margin-top: 8px;
       span {
         @include mono;
-        font-size: 12px;
       }
     }
   }

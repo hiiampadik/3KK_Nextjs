@@ -32,6 +32,7 @@
       align-items: flex-start;
       gap: 4px;
       @include mono;
+      margin-top: 20px;
 
       .documentsTitle {
         text-transform: uppercase;
