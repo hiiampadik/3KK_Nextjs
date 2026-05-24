@@ -1,5 +1,14 @@
 @import '_variables.scss';
 
+/* Neue Haas Unica Pro */
+@font-face {
+  font-family: 'neue-haas-unica';
+  src: url('/fonts/Neue Haas Unica Pro Woff/NeueHaasUnicaPro-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
