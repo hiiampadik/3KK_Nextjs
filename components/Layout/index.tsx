@@ -8,6 +8,7 @@ import {useRouter} from 'next/router';
 import {useLocale} from '@/components/utils/useLocale';
 import {LocalizedRichParagraph, LocalizedString, LocalizedText} from '@/api/sanity.types';
 import Loading from '@/components/Layout/Loading';
+import {CoverSlide} from '@/components/Layout/CoverSwiper';
 
 export const WEBSITE_NAME_CZ = 'Divadlo 3+KK'
 export const WEBSITE_NAME_EN = 'Theatre 3+KK'
@@ -24,6 +25,7 @@ interface LayoutProps {
     readonly title?: string
     readonly loading?: boolean;
     readonly cover?: { asset?: { _ref: string }};
+    readonly coverGallery?: ReadonlyArray<CoverSlide>
     readonly description?: LocalizedRichParagraph
     readonly image?: {
         url: string,
@@ -38,6 +40,7 @@ const Layout: FunctionComponent<PropsWithChildren<LayoutProps>> = (
         loading = undefined,
         image,
         cover,
+        coverGallery,
         description,
         seo
     }) => {
@@ -169,7 +172,7 @@ const Layout: FunctionComponent<PropsWithChildren<LayoutProps>> = (
 
             <main>
                 <Loading/>
-                <Navigation cover={cover} description={description}/>
+                <Navigation cover={cover} coverGallery={coverGallery} description={description}/>
                 <div className={classNames([styles.content, loading ? styles.loading : styles.loaded])}>
                     {children}
                 </div>

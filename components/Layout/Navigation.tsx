@@ -9,14 +9,16 @@ import {useLocale} from '@/components/utils/useLocale';
 import Figure from '@/components/Sanity/Figure';
 import BlockContent from '@/components/Sanity/BlockContent';
 import {LocalizedRichParagraph} from '@/api/sanity.types';
+import CoverSwiper, {CoverSlide} from '@/components/Layout/CoverSwiper';
 
 interface Props {
     readonly cover?: { asset?: { _ref: string }};
     readonly description?: LocalizedRichParagraph
+    readonly coverGallery?: ReadonlyArray<CoverSlide>
 }
 
 
-const Navigation: FunctionComponent<Props> = ({cover, description}) => {
+const Navigation: FunctionComponent<Props> = ({cover, description, coverGallery}) => {
     const router = useRouter();
     const locale = useLocale()
     const t = useTranslations('Navigation');
@@ -88,7 +90,9 @@ const Navigation: FunctionComponent<Props> = ({cover, description}) => {
 
             </nav>
 
-            {cover ?
+            {coverGallery && coverGallery.length > 0 ?
+                <CoverSwiper slides={coverGallery}/>
+                : cover ?
                 <div className={styles.coverContainer}>
                     <div className={styles.cover}>
                         <Figure image={cover} fullWidth={true}/>

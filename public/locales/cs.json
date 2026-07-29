@@ -14,7 +14,8 @@
     },
 
     "Homepage": {
-        "tickets": "Vstupenky"
+        "tickets": "Vstupenky",
+        "detail": "Více"
     },
 
     "Projects": {

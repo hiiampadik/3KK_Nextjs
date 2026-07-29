@@ -11,7 +11,6 @@ import {useLocale} from '@/components/utils/useLocale';
 import localizedTime from '@/components/utils/LocalizeTime';
 import BlockContent from '@/components/Sanity/BlockContent';
 import {useTranslations} from 'next-intl';
-import Figure from '@/components/Sanity/Figure';
 
 export default function Home({data}: {data: HomepageType}) {
     const locale = useLocale();
@@ -26,10 +25,17 @@ export default function Home({data}: {data: HomepageType}) {
         return acc;
     }, {} as Record<string, typeof program>);
 
+    const coverGallery = program
+        .filter(event => event.project.cover)
+        .filter((event, index, events) =>
+            events.findIndex(e => e.project._id === event.project._id) === index)
+        .map(event => ({_key: event.project._id, project: event.project}));
+
     return (
         <>
             <Layout
                 cover={data.cover}
+                coverGallery={coverGallery}
                 description={data.description}
                 seo={data.seo}
             >
@@ -73,14 +79,6 @@ export default function Home({data}: {data: HomepageType}) {
                                                     }
                                                     {event.ticket &&
                                                         <a href={event.ticket} className={styles.tickets}>{t('tickets')}</a>
-                                                    }
-                                                </div>
-                                                <div className={styles.coverContainer}>
-                                                    {event.project.cover &&
-                                                        <Figure
-                                                            image={event.project.cover}
-                                                            alt={event.project.title[locale]}
-                                                        />
                                                     }
                                                 </div>
                                             </li>

@@ -138,6 +138,48 @@
     margin-right: 0;
     gap: 10px;
   }
+}
+
+// The auto-playing cover swiper occupies the same footprint as the static cover.
+.coverSwiper {
+  width: 100%;
+  height: calc(100vh - 275px);
+  min-height: 400px;
+
+  @media (max-width: $breakpoint-sm-max) {
+    margin-top: 6px;
+  }
+
+  :global(.swiper-wrapper) {
+    height: 100%;
+  }
+
+  // The extra `.coverSwiper` scope raises specificity above Swiper's own
+  // `.swiper-slide { display:block; height:100% }` base rule, and nesting the
+  // cover/description overrides under the slide keeps them above the shared
+  // `.coverSlide .cover` rule regardless of source order.
+  :global(.swiper-slide) {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    height: 100%;
+
+    // The image fills the remaining space, the description always keeps its
+    // natural height so the title + button stay visible inside the slide.
+    .cover {
+      flex: 1 1 auto;
+      height: auto;
+      min-height: 0;
+    }
+    .description {
+      flex: 0 0 auto;
+    }
+  }
+}
+
+// Shared look of the cover image + description, used by both the static cover
+// and the individual swiper slides.
+.coverContainer, .coverSlide {
   .cover {
     position: relative;
     overflow: hidden;
@@ -162,13 +204,31 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(to top, rgba(248, 248, 248, 1) 0%, rgba(248, 248, 248, 0.7) 20%, rgba(248, 248, 248, 0) 40%, rgba(248, 248, 248, 0) calc(100% - 200px), rgba(248, 248, 248, 1) 100%);
+    //background: linear-gradient(to top, rgba(248, 248, 248, 1) 0%, rgba(248, 248, 248, 0.7) 20%, rgba(248, 248, 248, 0) 40%, rgba(248, 248, 248, 0) calc(100% - 200px), rgba(248, 248, 248, 1) 100%);
+    background: linear-gradient(to top, rgba(248, 248, 248, 1) 0%, rgba(248, 248, 248, 0.7) 15%, rgba(248, 248, 248, 0) 40%);
   }
 
   .description {
     @include sans;
     @include marginHorizontal;
     flex: 0 1 auto;
+  }
+}
+
+.coverTitle {
+  @include mono;
+}
+
+.coverButton {
+  @include mono;
+  @include underline;
+  width: fit-content;
+  text-decoration-color: currentColor;
+
+  @media (hover: hover) {
+    &:hover {
+      text-decoration: none;
+    }
   }
 }
 
