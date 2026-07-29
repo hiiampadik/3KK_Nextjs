@@ -68,6 +68,17 @@
         object-fit: cover;
         display: block;
       }
+
+      .emoji {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        font-size: 96px;
+        line-height: 1;
+        user-select: none;
+      }
     }
     .cover::after {
       position: absolute;

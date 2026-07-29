@@ -9,6 +9,7 @@ import {useTranslations} from 'next-intl';
 import BlockContent from '@/components/Sanity/BlockContent';
 import {useLocale} from '@/components/utils/useLocale';
 import Figure from '@/components/Sanity/Figure';
+import RandomFace from '@/components/utils/RandomFace';
 
 export default function About({data}: {data: AboutSanity}) {
     const t = useTranslations('About');
@@ -28,8 +29,10 @@ export default function About({data}: {data: AboutSanity}) {
                         {data.team?.map((member, index) => (
                             <div key={index} className={styles.member}>
                                 <div className={styles.cover}>
-                                    {member.photo &&
+                                    {member.photo ?
                                         <Figure image={member.photo}/>
+                                        :
+                                        <RandomFace className={styles.emoji}/>
                                     }
                                 </div>
                                 <h3>{member.name}</h3>
