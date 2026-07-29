@@ -3,6 +3,7 @@
 .homepageContainer {
   @include margin;
   min-height: 300px;
+
   h1 {
     @include headline;
     @include marginVertical;
@@ -45,7 +46,7 @@
     &:last-of-type{
       border: none;
     }
-    flex-direction: column;
+    justify-content: space-between;
   }
 }
 
@@ -57,7 +58,10 @@
   padding: 20px 0 10px;
 
   .dateContainer{
-    flex: 0 0 150px;
+    flex: 0 0 230px;
+    @media (max-width: $breakpoint-lg-max) {
+      flex: 0 0 150px;
+    }
     .date {
       @include headline2;
       margin-bottom: 8px;
@@ -104,8 +108,10 @@
 }
 
 .externalLinks {
+  padding: 20px 0 10px;
   display: flex;
   gap: 10px;
+
 
   .tickets, .fb {
     @include outlinedLink;
