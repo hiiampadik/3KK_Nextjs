@@ -47,6 +47,9 @@
       border: none;
     }
     justify-content: space-between;
+    @media (max-width: $breakpoint-sm-max) {
+      flex-direction: column;
+    }
   }
 }
 
@@ -56,6 +59,10 @@
   gap: 10px;
   text-decoration: none;
   padding: 20px 0 10px;
+
+  @media (max-width: $breakpoint-sm-max) {
+    padding-top: 0;
+  }
 
   .dateContainer{
     flex: 0 0 230px;

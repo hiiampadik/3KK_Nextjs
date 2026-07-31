@@ -28,6 +28,7 @@ const Navigation: FunctionComponent<Props> = ({cover, description, coverGallery}
 
     return (
         <>
+            <div className={styles.gradient}></div>
             <nav className={classNames([styles.nav])}>
                 <div className={styles.navLeft}>
                     <Link href={`/${locale}`} className={classNames([styles.logo])}>

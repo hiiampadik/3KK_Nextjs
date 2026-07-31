@@ -14,17 +14,42 @@
   }
 }
 
+.gradient {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 130px;
+  z-index: 100;
+  background: linear-gradient(
+    to bottom,
+    rgba(248, 248, 248, 1) 0%,
+    rgba(248, 248, 248, 0.95) 12%,
+    rgba(248, 248, 248, 0.82) 25%,
+    rgba(248, 248, 248, 0.62) 40%,
+    rgba(248, 248, 248, 0.4) 55%,
+    rgba(248, 248, 248, 0.2) 72%,
+    rgba(248, 248, 248, 0.06) 87%,
+    rgba(248, 248, 248, 0) 100%
+  );
+}
+
 .nav {
-  padding: 30px;
+  left: 30px;
+  right: 30px;
+  top: 30px;
   @media (max-width: $breakpoint-sm-max) {
-    padding: 20px;
+    left: 20px;
+    right: 20px;
+    top: 20px;
   }
   @media (max-width: $breakpoint-xs-max) {
-    padding: 15px;
+    left: 10px;
+    right: 10px;
+    top: 10px;
   }
   gap: 20px;
-  position: absolute;
-  width: 100vw;
+  position: fixed;
   z-index: 100;
   display: flex;
   flex-wrap: nowrap;
@@ -52,6 +77,11 @@
 
   .link {
     @include menuLinkBig;
+    text-align: center;
+    padding: 10px 30px;
+    @media (max-width: $breakpoint-sm-max) {
+      padding: 10px 20px;
+    }
   }
   .logo {
     @include menuLinkBig;
@@ -134,7 +164,6 @@
   min-height: 400px;
 
   @media (max-width: $breakpoint-sm-max) {
-    margin-top: 6px;
     margin-right: 0;
     gap: 10px;
   }
@@ -146,9 +175,6 @@
   height: calc(100vh - 500px);
   min-height: 400px;
 
-  @media (max-width: $breakpoint-sm-max) {
-    margin-top: 6px;
-  }
 
   :global(.swiper-wrapper) {
     height: 100%;
@@ -200,12 +226,23 @@
     position: absolute;
     content: '';
     z-index: 1;
-    top: 0;
+    height: 150px;
     left: 0;
     right: 0;
     bottom: 0;
     //background: linear-gradient(to top, rgba(248, 248, 248, 1) 0%, rgba(248, 248, 248, 0.7) 20%, rgba(248, 248, 248, 0) 40%, rgba(248, 248, 248, 0) calc(100% - 200px), rgba(248, 248, 248, 1) 100%);
-    background: linear-gradient(to top, rgba(248, 248, 248, 1) 0%, rgba(248, 248, 248, 0.7) 15%, rgba(248, 248, 248, 0) 40%);
+
+    background: linear-gradient(
+            to top,
+            rgba(248, 248, 248, 1) 0%,
+            rgba(248, 248, 248, 0.95) 12%,
+            rgba(248, 248, 248, 0.82) 25%,
+            rgba(248, 248, 248, 0.62) 40%,
+            rgba(248, 248, 248, 0.4) 55%,
+            rgba(248, 248, 248, 0.2) 72%,
+            rgba(248, 248, 248, 0.06) 87%,
+            rgba(248, 248, 248, 0) 100%
+    );
   }
 
   .description {
