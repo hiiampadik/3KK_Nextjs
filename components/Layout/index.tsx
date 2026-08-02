@@ -173,10 +173,12 @@ const Layout: FunctionComponent<PropsWithChildren<LayoutProps>> = (
             <main>
                 <Loading/>
                 <Navigation cover={cover} coverGallery={coverGallery} description={description}/>
-                <div className={classNames([styles.content, loading ? styles.loading : styles.loaded])}>
-                    {children}
+                <div className={styles.pageBody}>
+                    <div className={classNames([styles.content, loading ? styles.loading : styles.loaded])}>
+                        {children}
+                    </div>
+                    <Footer/>
                 </div>
-                <Footer/>
             </main>
         </>
     );

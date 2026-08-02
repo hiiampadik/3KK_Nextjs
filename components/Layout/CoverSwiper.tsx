@@ -1,5 +1,5 @@
 'use client'
-import React, {FunctionComponent} from 'react';
+import React, {FunctionComponent, useState} from 'react';
 import {Swiper, SwiperSlide} from 'swiper/react';
 import {Autoplay, EffectFade} from 'swiper/modules';
 import 'swiper/css';
@@ -24,41 +24,57 @@ const CoverSwiper: FunctionComponent<Props> = ({slides}) => {
     const locale = useLocale();
     const t = useTranslations('Homepage');
 
+    // The images are pinned; the title/link of the *active* slide is rendered in
+    // the scrolling layer (over the image) so it rides up with the content.
+    const [activeIndex, setActiveIndex] = useState(0);
+    const active = slides[activeIndex]?.project;
+
     return (
-        <Swiper
-            modules={[Autoplay, EffectFade]}
-            effect={'fade'}
-            fadeEffect={{crossFade: true}}
-            speed={500}
-            autoplay={{delay: 8000, disableOnInteraction: false}}
-            loop={true}
-            slidesPerView={1}
-            allowTouchMove={false}
-            className={styles.coverSwiper}
-        >
-            {slides.map(slide => (
-                <SwiperSlide key={slide._key} className={styles.coverSlide}>
-                    <div className={styles.cover}>
-                        {slide.project.cover &&
-                            <Figure
-                                image={slide.project.cover}
-                                fullWidth={true}
-                                alt={slide.project.title[locale]}
-                            />
-                        }
-                    </div>
-                    <div className={styles.description}>
-                        <h2 className={styles.coverTitle}>{slide.project.title[locale]}</h2>
+        <>
+            <div className={styles.coverFixedSwiper}>
+                <Swiper
+                    modules={[Autoplay, EffectFade]}
+                    effect={'fade'}
+                    fadeEffect={{crossFade: true}}
+                    speed={500}
+                    autoplay={{delay: 8000, disableOnInteraction: false}}
+                    loop={true}
+                    slidesPerView={1}
+                    allowTouchMove={false}
+                    onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
+                    className={styles.coverSwiper}
+                >
+                    {slides.map(slide => (
+                        <SwiperSlide key={slide._key} className={styles.coverSlide}>
+                            <div className={styles.cover}>
+                                {slide.project.cover &&
+                                    <Figure
+                                        image={slide.project.cover}
+                                        fullWidth={true}
+                                        alt={slide.project.title[locale]}
+                                    />
+                                }
+                            </div>
+                        </SwiperSlide>
+                    ))}
+                </Swiper>
+            </div>
+
+            <div className={styles.coverScrollSwiper}>
+                {active &&
+                    <div className={styles.coverSwiperTitle}>
+                        <h2 className={styles.coverTitle}>{active.title[locale]}</h2>
                         <Link
-                            href={`/${locale}/projects/${slide.project.slug.current}`}
+                            href={`/${locale}/projects/${active.slug.current}`}
                             className={styles.coverButton}
                         >
                             {t('detail')}
                         </Link>
                     </div>
-                </SwiperSlide>
-            ))}
-        </Swiper>
+                }
+                <div className={styles.coverSwiperFade}/>
+            </div>
+        </>
     );
 };
 

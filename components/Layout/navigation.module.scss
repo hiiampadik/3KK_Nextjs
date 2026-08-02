@@ -1,6 +1,36 @@
 @import '../../styles/variables';
 
+// Fade that sits over the bottom of the cover image: transparent at the top,
+// solid page background at the bottom. Lives in the scrolling layer so it starts
+// on the image and rides up with the content on scroll.
+@mixin bottomFade {
+  background: linear-gradient(
+    to top,
+    rgba(248, 248, 248, 1) 0%,
+    rgba(248, 248, 248, 0.95) 12%,
+    rgba(248, 248, 248, 0.82) 25%,
+    rgba(248, 248, 248, 0.62) 40%,
+    rgba(248, 248, 248, 0.4) 55%,
+    rgba(248, 248, 248, 0.2) 72%,
+    rgba(248, 248, 248, 0.06) 87%,
+    rgba(248, 248, 248, 0) 100%
+  );
+}
+
+// Everything below the pinned hero (main content + footer + the gaps between
+// them) lives in this opaque layer. Because the hero is `position: fixed` it
+// stays at the viewport top at every scroll offset, so the whole scrolling column
+// must be opaque — otherwise the image shows through the footer and its margins.
+.pageBody {
+  position: relative;
+  z-index: 1;
+  background: $gray;
+}
+
 .content {
+  // The content scrolls up over the pinned hero; the fade that reveals the hero
+  // lives on the cover spacer, sitting on the image's bottom edge.
+  background: $gray;
   animation: appear 0.7s forwards cubic-bezier(.27,.64,.67,.98);
   transform: translateY(30px);
 }
@@ -21,6 +51,8 @@
   right: 0;
   height: 130px;
   z-index: 100;
+  // Purely decorative backdrop — must not swallow clicks meant for the content.
+  pointer-events: none;
   background: linear-gradient(
     to bottom,
     rgba(248, 248, 248, 1) 0%,
@@ -156,12 +188,34 @@
   animation-delay: 0.6s;
 }
 
+// The image itself is pinned to the viewport (behind the content), while this
+// container only holds the reserved space + description in the scrolling layer.
+.coverFixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 0;
+  height: calc(100svh - 300px);
+  min-height: 400px;
+  overflow: hidden;
+  display: flex;
+  background: #E5FC54;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+}
+
 .coverContainer {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  height: calc(100vh - 300px);
-  min-height: 400px;
 
   @media (max-width: $breakpoint-sm-max) {
     margin-right: 0;
@@ -169,11 +223,48 @@
   }
 }
 
-// The auto-playing cover swiper occupies the same footprint as the static cover.
+// Reserves the footprint of the fixed cover so the content starts below it. Using
+// `svh` keeps the height stable when the mobile browser UI bar hides/shows, so the
+// image no longer grows on scroll. Its `::after` fade sits over the image's bottom
+// edge and rides up with the content on scroll.
+.coverSpacer {
+  position: relative;
+  z-index: 1;
+  height: calc(100svh - 300px);
+  min-height: 400px;
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 150px;
+    pointer-events: none;
+    @include bottomFade;
+  }
+}
+
+// The swiper is pinned to the viewport via this wrapper (a plain div we control),
+// rather than putting `position: fixed` on the Swiper root — Swiper's own
+// `.swiper { position: relative }` base rule would otherwise win the cascade and
+// let the whole thing scroll. `svh` keeps the height stable when the mobile
+// browser UI bar hides/shows.
+.coverFixedSwiper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 0;
+  // Same footprint as the static cover so the content starts at the same offset
+  // on the landing page and on project detail (and more of the image shows).
+  height: calc(100svh - 300px);
+  min-height: 400px;
+}
+
 .coverSwiper {
   width: 100%;
-  height: calc(100vh - 500px);
-  min-height: 400px;
+  height: 100%;
 
 
   :global(.swiper-wrapper) {
@@ -203,6 +294,42 @@
   }
 }
 
+// Scrolling layer over the pinned swiper. It reserves the swiper's footprint so
+// the content starts at the same offset as project detail, and holds — pinned to
+// the bottom of the image — the active slide's title (sitting on the image) with
+// the fade directly beneath it. The whole block rides up with the content on
+// scroll, so title + fade travel together and the content follows with no gap.
+.coverScrollSwiper {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: calc(100svh - 300px);
+  min-height: 400px;
+  pointer-events: none; // only the title's link should be clickable (re-enabled below)
+}
+
+// The title/link sit on the image, just above the fade.
+.coverSwiperTitle {
+  @include sans;
+  @include marginHorizontal;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  pointer-events: auto;
+  position: absolute;
+  bottom: 20px;
+}
+
+// Fade directly under the title: transparent over the image, solid page
+// background at the bottom where the content begins.
+.coverSwiperFade {
+  height: 150px;
+  @include bottomFade;
+}
+
 // Shared look of the cover image + description, used by both the static cover
 // and the individual swiper slides.
 .coverContainer, .coverSlide {
@@ -222,34 +349,20 @@
 
     }
   }
-  .cover::after {
-    position: absolute;
-    content: '';
-    z-index: 1;
-    height: 150px;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    //background: linear-gradient(to top, rgba(248, 248, 248, 1) 0%, rgba(248, 248, 248, 0.7) 20%, rgba(248, 248, 248, 0) 40%, rgba(248, 248, 248, 0) calc(100% - 200px), rgba(248, 248, 248, 1) 100%);
-
-    background: linear-gradient(
-            to top,
-            rgba(248, 248, 248, 1) 0%,
-            rgba(248, 248, 248, 0.95) 12%,
-            rgba(248, 248, 248, 0.82) 25%,
-            rgba(248, 248, 248, 0.62) 40%,
-            rgba(248, 248, 248, 0.4) 55%,
-            rgba(248, 248, 248, 0.2) 72%,
-            rgba(248, 248, 248, 0.06) 87%,
-            rgba(248, 248, 248, 0) 100%
-    );
-  }
 
   .description {
     @include sans;
     @include marginHorizontal;
     flex: 0 1 auto;
   }
+}
+
+// The static cover's description lives in the scrolling layer, so it needs an
+// opaque background + higher stacking to cover the pinned image as it rides up.
+.coverContainer .description {
+  position: relative;
+  z-index: 1;
+  background: $gray;
 }
 
 .coverTitle {

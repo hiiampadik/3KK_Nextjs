@@ -94,16 +94,19 @@ const Navigation: FunctionComponent<Props> = ({cover, description, coverGallery}
             {coverGallery && coverGallery.length > 0 ?
                 <CoverSwiper slides={coverGallery}/>
                 : cover ?
-                <div className={styles.coverContainer}>
-                    <div className={styles.cover}>
+                <>
+                    <div className={styles.coverFixed}>
                         <Figure image={cover} fullWidth={true}/>
                     </div>
-                    {description &&
-                        <div className={styles.description}>
-                            <BlockContent blocks={description[locale]}/>
-                        </div>
-                    }
-                </div>
+                    <div className={styles.coverContainer}>
+                        <div className={styles.coverSpacer}/>
+                        {description &&
+                            <div className={styles.description}>
+                                <BlockContent blocks={description[locale]}/>
+                            </div>
+                        }
+                    </div>
+                </>
                 :
                 <div className={styles.spacer}/>
             }
