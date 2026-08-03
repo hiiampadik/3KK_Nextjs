@@ -11,6 +11,7 @@ import Figure from '@/components/Sanity/Figure';
 import BlockContent from '@/components/Sanity/BlockContent';
 import {LocalizedRichParagraph} from '@/api/sanity.types';
 import CoverSwiper, {CoverSlide} from '@/components/Layout/CoverSwiper';
+import ProgramReveal from '@/components/Layout/ProgramReveal';
 
 interface Props {
     readonly cover?: { asset?: { _ref: string }};
@@ -144,9 +145,11 @@ const Navigation: FunctionComponent<Props> = ({cover, description, coverGallery}
                     <div className={styles.coverContainer}>
                         <div className={styles.coverSpacer}/>
                         {description &&
-                            <div className={styles.description}>
-                                <BlockContent blocks={description[locale]}/>
-                            </div>
+                            <ProgramReveal key={locale}>
+                                <div className={styles.description} data-reveal-group data-reveal="text">
+                                    <BlockContent blocks={description[locale]}/>
+                                </div>
+                            </ProgramReveal>
                         }
                     </div>
                 </>

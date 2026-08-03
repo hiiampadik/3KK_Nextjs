@@ -40,7 +40,11 @@ export default function Home({data}: {data: HomepageType}) {
                 description={data.description}
                 seo={data.seo}
             >
-                <ProgramReveal className={styles.homepageContainer}>
+                {/* `_app` keys pages on `router.route`, which is `/[locale]` for both
+                    languages — so switching cs/en re-renders this page in place instead
+                    of remounting it. Without this key the reveal effect never re-runs and
+                    the rebuilt text is left with no masks. */}
+                <ProgramReveal key={locale} className={styles.homepageContainer}>
                     <h1 data-reveal-group data-reveal="text">Program</h1>
                     <div className={styles.programContainer}>
                         <div className={styles.scrollingPart}>

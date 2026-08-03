@@ -1,15 +1,19 @@
 'use client'
-import React, {FunctionComponent, useState} from 'react';
+import React, {FunctionComponent, useEffect, useLayoutEffect, useRef, useState} from 'react';
 import {Swiper, SwiperSlide} from 'swiper/react';
 import {Autoplay, EffectFade} from 'swiper/modules';
+import gsap from 'gsap';
 import 'swiper/css';
 import 'swiper/css/effect-fade';
 import Link from 'next/link';
 import styles from './navigation.module.scss';
+import {classNames} from '@/components/utils/classNames';
 import Figure from '@/components/Sanity/Figure';
 import {useLocale} from '@/components/utils/useLocale';
 import {useTranslations} from 'next-intl';
 import {HomepageProject} from '@/api/homepage';
+
+const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
 export interface CoverSlide {
     readonly _key: string
@@ -28,6 +32,47 @@ const CoverSwiper: FunctionComponent<Props> = ({slides}) => {
     // the scrolling layer (over the image) so it rides up with the content.
     const [activeIndex, setActiveIndex] = useState(0);
     const active = slides[activeIndex]?.project;
+
+    const titleRef = useRef<HTMLDivElement>(null);
+
+    // Keep the title hidden on the very first paint so it doesn't flash at its
+    // resting position before GSAP tucks it below its mask. Cleared as soon as the
+    // reveal is set up (or immediately when motion is reduced).
+    const [pending, setPending] = useState(true);
+
+    // The title + detail link rise out of their masks the same way the programme
+    // rows do — but this replays on every slide change (a re-split like the
+    // programme uses would break as the title text swaps), so the incoming slide's
+    // title emerges from the bottom rather than popping in.
+    useIsomorphicLayoutEffect(() => {
+        const el = titleRef.current;
+        if (!el) return;
+
+        const targets = el.querySelectorAll<HTMLElement>('[data-reveal]');
+        if (targets.length === 0) {
+            setPending(false);
+            return;
+        }
+
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            setPending(false);
+            return;
+        }
+
+        gsap.set(targets, {yPercent: 110});
+        setPending(false);
+        const tween = gsap.to(targets, {
+            yPercent: 0,
+            duration: 0.8,
+            ease: 'power3.out',
+            stagger: 0.08,
+            overwrite: true,
+        });
+
+        return () => {
+            tween.kill();
+        };
+    }, [activeIndex]);
 
     return (
         <>
@@ -60,16 +105,28 @@ const CoverSwiper: FunctionComponent<Props> = ({slides}) => {
                 </Swiper>
             </div>
 
+            {/* Without JS the reveal never runs, so the pre-hide must not stick. */}
+            <noscript>
+                <style>{`.${styles.titlePending}{visibility:visible!important}`}</style>
+            </noscript>
             <div className={styles.coverScrollSwiper}>
                 {active &&
-                    <div className={styles.coverSwiperTitle}>
-                        <h2 className={styles.coverTitle}>{active.title[locale]}</h2>
-                        <Link
-                            href={`/${locale}/projects/${active.slug.current}`}
-                            className={styles.coverButton}
-                        >
-                            {t('detail')}
-                        </Link>
+                    <div
+                        ref={titleRef}
+                        className={classNames([styles.coverSwiperTitle, pending && styles.titlePending])}
+                    >
+                        <div className={styles.coverTitleMask}>
+                            <h2 className={styles.coverTitle} data-reveal>{active.title[locale]}</h2>
+                        </div>
+                        <div className={styles.coverTitleMask}>
+                            <Link
+                                href={`/${locale}/projects/${active.slug.current}`}
+                                className={styles.coverButton}
+                                data-reveal
+                            >
+                                {t('detail')}
+                            </Link>
+                        </div>
                     </div>
                 }
                 <div className={styles.coverSwiperFade}/>

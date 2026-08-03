@@ -195,7 +195,7 @@
   min-height: 400px;
   overflow: hidden;
   display: flex;
-  background: #E5FC54;
+  background: $gray;
 
   img {
     width: 100%;
@@ -318,6 +318,28 @@
   bottom: 20px;
 }
 
+// Held invisible until GSAP has tucked the title below its mask, so it never
+// flashes at its resting position on the first paint.
+.titlePending {
+  visibility: hidden;
+}
+
+// Clip box the title + link rise out of on load and on every slide change. The
+// padding/negative-margin pair (as on the programme's line masks) grows the clip
+// so it never shaves glyph descenders or the button underline, while giving the
+// space straight back so the layout spacing is unchanged.
+.coverTitleMask {
+  overflow: hidden;
+  width: fit-content;
+  max-width: 100%;
+  margin-bottom: -0.2em;
+
+  > * {
+    display: block;
+    padding-bottom: 0.2em;
+  }
+}
+
 // Fade directly under the title: transparent over the image, solid page
 // background at the bottom where the content begins.
 .coverSwiperFade {
@@ -333,7 +355,7 @@
     overflow: hidden;
     display: flex;
     height: 100%;
-    background: #E5FC54;
+    background: $gray;
 
     img {
       width: 100%;
