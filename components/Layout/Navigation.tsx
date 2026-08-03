@@ -1,7 +1,8 @@
 'use client'
-import React, {FunctionComponent} from 'react';
+import React, {FunctionComponent, useEffect, useLayoutEffect, useRef, useState} from 'react';
 import {useRouter} from 'next/router';
 import Link from 'next/link';
+import gsap from 'gsap';
 import styles from './navigation.module.scss';
 import {classNames} from '@/components/utils/classNames';
 import {useTranslations} from 'next-intl';
@@ -17,11 +18,53 @@ interface Props {
     readonly coverGallery?: ReadonlyArray<CoverSlide>
 }
 
+// Plays the intro only once per full page load. Module state survives client-side
+// navigation, so the buttons pop when someone first visits the site, but stay put
+// when navigating between pages. A fresh visit (full reload) re-initialises the
+// module and pops again.
+let hasPlayedNavIntro = false;
+
+const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
+
 
 const Navigation: FunctionComponent<Props> = ({cover, description, coverGallery}) => {
     const router = useRouter();
     const locale = useLocale()
     const t = useTranslations('Navigation');
+
+    const navRef = useRef<HTMLElement>(null);
+
+    // On a fresh visit the items render hidden (via `introPending`) so nothing
+    // flashes on screen while each button waits out its random delay. They only
+    // become visible as GSAP pops them in. On client-side navigation the intro has
+    // already played, so the items render visible straight away.
+    const [introPending, setIntroPending] = useState(!hasPlayedNavIntro);
+
+    useIsomorphicLayoutEffect(() => {
+        if (hasPlayedNavIntro) return;
+        hasPlayedNavIntro = true;
+
+        const nav = navRef.current;
+        const items = nav ? Array.from(nav.querySelectorAll('a')) : [];
+        if (items.length === 0) {
+            setIntroPending(false);
+            return;
+        }
+
+        // Each button/link pops in from nothing with its own random delay. The
+        // delays are baked into a timeline once (a random stagger *function* gets
+        // re-evaluated by GSAP and can leave items stranded at the from-state), and
+        // `autoAlpha` keeps an item fully invisible until its delay ends.
+        const tl = gsap.timeline({onComplete: () => setIntroPending(false)});
+        items.forEach((el) => {
+            tl.from(el, {
+                scale: 0,
+                autoAlpha: 0,
+                duration: 0.55,
+                ease: 'back.out(1.7)',
+            }, Math.random() * 0.7 + 0.3);
+        });
+    }, []);
 
     const otherLocale = locale === 'cs' ? 'en' : 'cs';
     const switchLocalePath = router.asPath.replace(/^\/(cs|en)/, `/${otherLocale}`);
@@ -29,7 +72,7 @@ const Navigation: FunctionComponent<Props> = ({cover, description, coverGallery}
     return (
         <>
             <div className={styles.gradient}></div>
-            <nav className={classNames([styles.nav])}>
+            <nav ref={navRef} className={classNames([styles.nav, introPending && styles.introPending])}>
                 <div className={styles.navLeft}>
                     <Link href={`/${locale}`} className={classNames([styles.logo])}>
                         <svg id="Vrstva_1" xmlns="http://www.w3.org/2000/svg" version="1.1"

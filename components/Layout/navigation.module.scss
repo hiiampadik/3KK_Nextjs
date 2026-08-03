@@ -66,6 +66,13 @@
   );
 }
 
+// Applied to the nav only on a fresh visit, before the GSAP intro runs. Hidden via
+// `visibility` (not `opacity`) so GSAP can still read each item's natural opacity
+// and pop it in with `autoAlpha`. Layout is preserved, so nothing reflows.
+.introPending a {
+  visibility: hidden;
+}
+
 .nav {
   left: 30px;
   right: 30px;
@@ -109,6 +116,9 @@
 
   .link {
     @include menuLinkBig;
+    // Drop `transform` from the transition (hover never animates it): otherwise the
+    // CSS transition fights GSAP's pop and the item freezes at a small scale.
+    transition: box-shadow 0.2s, background 0.2s;
     text-align: center;
     padding: 10px 30px;
     @media (max-width: $breakpoint-sm-max) {
@@ -117,6 +127,7 @@
   }
   .logo {
     @include menuLinkBig;
+    transition: box-shadow 0.2s, background 0.2s;
     padding: 12px;
     height: 40px;
     svg {
