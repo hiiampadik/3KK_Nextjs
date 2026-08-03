@@ -1,5 +1,40 @@
 @import '_variables.scss';
 
+// ---------------------------------------------------------------------------
+// Scroll reveal (see components/Layout/ProgramReveal.tsx)
+// ---------------------------------------------------------------------------
+
+// Holds the programme invisible until GSAP has put the from-state in place, so
+// nothing flashes at full opacity before the reveal starts. `visibility` keeps the
+// layout intact, so nothing reflows when it clears.
+.revealPending {
+  visibility: hidden;
+}
+
+// SplitText injects these class names itself, so they are global rather than
+// module-scoped. Each line sits inside a clone with `overflow: clip` named
+// `<linesClass>-mask`; the line then slides up out of that box.
+//
+// The padding is the descender fix: headline text is 36px on a 1.15em line box
+// (~41px) while the glyph box runs to ~1.2em, so a clip at the line box would
+// shave the tails off g/j/p/y. The extra bottom padding grows each line's clip
+// box, and the equal negative margin on the mask gives the space straight back so
+// line spacing is unchanged.
+:global(.revealLine) {
+  padding-bottom: 0.14em;
+}
+
+:global(.revealLine-mask) {
+  margin-bottom: -0.14em;
+}
+
+// Mask for the pills and buttons, which rise as a whole rather than per line.
+.revealMask {
+  display: block;
+  width: fit-content;
+  overflow: hidden;
+}
+
 .homepageContainer {
   @include margin;
   min-height: 300px;
@@ -84,9 +119,14 @@
       @include headline2;
       margin-bottom: 8px;
     }
+    // The gap below the pill lives on the mask wrapper, not the pill: inside the
+    // clip box it would make the box taller than the pill, and the pill would
+    // still peek out at the bottom in its hidden from-state.
+    > .revealMask {
+      margin-bottom: 8px;
+    }
     .tag {
       width: fit-content;
-      margin-bottom: 8px;
       @include mono;
       background-color: #EFBFFF;
       padding: 8px 18px;
@@ -100,7 +140,11 @@
 
   @media (hover: hover) {
     &:hover {
-      h2, .date {
+      // The line elements are listed explicitly: once SplitText has run, the text
+      // lives inside injected line divs, and relying on `text-decoration` to
+      // propagate down through the clipping masks is fragile.
+      h2, .date,
+      h2 :global(.revealLine), .date :global(.revealLine) {
         @include underline;
       }
     }
@@ -119,6 +163,11 @@
   display: flex;
   gap: 10px;
 
+  // The mask wrapper is the flex item now, so it carries the alignment the
+  // buttons used to set on themselves.
+  .revealMask {
+    align-self: flex-start;
+  }
 
   .tickets, .fb {
     @include outlinedLink;

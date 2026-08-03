@@ -11,6 +11,7 @@ import {useLocale} from '@/components/utils/useLocale';
 import localizedTime from '@/components/utils/LocalizeTime';
 import BlockContent from '@/components/Sanity/BlockContent';
 import {useTranslations} from 'next-intl';
+import ProgramReveal from '@/components/Layout/ProgramReveal';
 
 export default function Home({data}: {data: HomepageType}) {
     const locale = useLocale();
@@ -39,46 +40,54 @@ export default function Home({data}: {data: HomepageType}) {
                 description={data.description}
                 seo={data.seo}
             >
-                <div className={styles.homepageContainer}>
-                    <h1>Program</h1>
+                <ProgramReveal className={styles.homepageContainer}>
+                    <h1 data-reveal-group data-reveal="text">Program</h1>
                     <div className={styles.programContainer}>
                         <div className={styles.scrollingPart}>
                             {Object.entries(programByMonth).map(([month, events]) => (
                                 <Fragment key={month}>
-                                    <h2 className={styles.monthHeader}>{month}</h2>
+                                    <h2 className={styles.monthHeader} data-reveal-group data-reveal="text">{month}</h2>
                                     <ul>
                                         {events.map(event => (
-                                            <li key={event._key}>
+                                            <li key={event._key} data-reveal-group>
                                                 <Link
                                                     href={`/${locale}/projects/${event.project.slug.current}`}
                                                     key={event.project._id}
                                                     className={styles.linkContainer}
                                                 >
                                                     <div className={styles.dateContainer}>
-                                                        <p className={styles.date}>{localizedDate(event.date, locale)}</p>
-                                                        <p className={styles.time}>
+                                                        <p className={styles.date} data-reveal="text">{localizedDate(event.date, locale)}</p>
+                                                        <p className={styles.time} data-reveal="text">
                                                             {localizedTime(event.date, locale)}
                                                         </p>
-                                                        <p className={styles.location}>
+                                                        <p className={styles.location} data-reveal="text">
                                                             {event.location}
                                                         </p>
                                                     </div>
                                                     <div className={styles.nameContainer}>
-                                                        <h2>
+                                                        <h2 data-reveal="text">
                                                             {event.project.title[locale]}
                                                         </h2>
-                                                        {event.tag && <div className={styles.tag}>{event.tag[locale]}</div>}
-                                                        <div className={styles.description}>
+                                                        {event.tag &&
+                                                            <div className={styles.revealMask}>
+                                                                <div className={styles.tag} data-reveal="box">{event.tag[locale]}</div>
+                                                            </div>
+                                                        }
+                                                        <div className={styles.description} data-reveal="text">
                                                             <BlockContent blocks={event.project.description[locale]} disableLinks/>
                                                         </div>
                                                     </div>
                                                 </Link>
                                                 <div className={styles.externalLinks}>
                                                     {event.facebook &&
-                                                        <a href={event.facebook} className={styles.fb}>Fb</a>
+                                                        <div className={styles.revealMask}>
+                                                            <a href={event.facebook} className={styles.fb} data-reveal="box">Fb</a>
+                                                        </div>
                                                     }
                                                     {event.ticket &&
-                                                        <a href={event.ticket} className={styles.tickets}>{t('tickets')}</a>
+                                                        <div className={styles.revealMask}>
+                                                            <a href={event.ticket} className={styles.tickets} data-reveal="box">{t('tickets')}</a>
+                                                        </div>
                                                     }
                                                 </div>
                                             </li>
@@ -88,7 +97,7 @@ export default function Home({data}: {data: HomepageType}) {
                             ))}
                         </div>
                     </div>
-                </div>
+                </ProgramReveal>
             </Layout>
         </>
     );

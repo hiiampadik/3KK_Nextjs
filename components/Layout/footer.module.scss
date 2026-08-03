@@ -1,13 +1,5 @@
 @import '../../styles/variables';
 
-@keyframes appear {
-  0%   {
-    transform: translateY(30px);
-  }
-  100%   {
-    transform: translateY(0%);
-  }
-}
 
 
 .footerContainer {
@@ -20,9 +12,6 @@
   justify-content: space-between;
   flex-wrap: wrap;
   @include mono;
-
-  animation: appear 0.7s forwards cubic-bezier(.27,.64,.67,.98);
-  transform: translateY(30px);
 
   @media (max-width: $breakpoint-md-max) {
     flex-direction: column;

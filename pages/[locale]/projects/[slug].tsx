@@ -90,18 +90,18 @@ export default function Project({project, programItems, documents}: {project: Pr
                         </div>
                 )}
                 <div className={styles.projectDetail}>
-                    <div className={styles.leftColumn}>
-                        {project.team && project.team.length > 0 &&
-                            <div className={styles.team}>
-                                {project.team.map(member => (
-                                    <div key={member.name} className={styles.member}>
-                                        <p className={styles.role}>{member.role[locale]}{':'}</p>
-                                        <p className={styles.name}>{member.name}</p>
-                                    </div>
-                                ))}
-                            </div>
-                        }
-                    </div>
+                    {project.team && project.team.length > 0 &&
+                        <div className={styles.leftColumn}>
+                                <div className={styles.team}>
+                                    {project.team.map(member => (
+                                        <div key={member.name} className={styles.member}>
+                                            <p className={styles.role}>{member.role[locale]}{':'}</p>
+                                            <p className={styles.name}>{member.name}</p>
+                                        </div>
+                                    ))}
+                                </div>
+                        </div>
+                    }
                     <div>
                         <div className={styles.abstract}>
                             <BlockContent blocks={project.abstract[locale]}/>

@@ -31,18 +31,8 @@
   // The content scrolls up over the pinned hero; the fade that reveals the hero
   // lives on the cover spacer, sitting on the image's bottom edge.
   background: $gray;
-  animation: appear 0.7s forwards cubic-bezier(.27,.64,.67,.98);
-  transform: translateY(30px);
 }
 
-@keyframes appear {
-  0%   {
-    transform: translateY(30px);
-  }
-  100%   {
-    transform: translateY(0%);
-  }
-}
 
 .gradient {
   position: fixed;
@@ -137,15 +127,12 @@
   }
   .link1 {
     background: #E5FC54;
-    animation-delay: 0s;
   }
   .link2 {
     background: #C294FF;
-    animation-delay: 1s;
   }
   .link3 {
     background: #32FE6B;
-    animation-delay: 2s;
   }
 
   .smallLink {
@@ -187,16 +174,13 @@
 .link1 {
   border-radius: 60px;
   background: #E5FC54;
-  animation-delay: 0.3s;
 }
 .link2 {
   background: #C294FF;
-  animation-delay: 0.5s;
 }
 .link3 {
   border-radius: 60px;
   background: #32FE6B;
-  animation-delay: 0.6s;
 }
 
 // The image itself is pinned to the viewport (behind the content), while this
