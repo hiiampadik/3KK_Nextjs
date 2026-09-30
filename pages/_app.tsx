@@ -20,22 +20,19 @@ const MyApp: FunctionComponent<AppProps> = ({ Component, router, pageProps }) =>
         };
     }, [router.events]);
 
-    // TODO
-    const googleAnalyticsId = 'G-'
-
     return (
         <>
             <Script
                 id="ga"
                 strategy="lazyOnload"
-                src={`https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}`}
+                src={`https://www.googletagmanager.com/gtag/js?id=${gtag.googleAnalyticsId}`}
             />
             <Script strategy="lazyOnload" id="ga2">
                 {`
                 window.dataLayer = window.dataLayer || [];
                 function gtag(){dataLayer.push(arguments);}
                 gtag('js', new Date());
-                gtag('config', '${googleAnalyticsId}', {
+                gtag('config', '${gtag.googleAnalyticsId}', {
                     page_path: window.location.pathname,
                     page_title: window.location.pathname,
                     page_location: window.location.href,
