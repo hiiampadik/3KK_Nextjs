@@ -15,6 +15,9 @@ import ProgramReveal from '@/components/Layout/ProgramReveal';
 
 interface Props {
     readonly cover?: { asset?: { _ref: string }};
+    // Undefined means full width — the historical behaviour, kept for every page
+    // that never opts out. Only an explicit `false` renders the contained cover.
+    readonly coverFullWidth?: boolean
     readonly description?: LocalizedRichParagraph
     readonly coverGallery?: ReadonlyArray<CoverSlide>
 }
@@ -28,7 +31,7 @@ let hasPlayedNavIntro = false;
 const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
 
-const Navigation: FunctionComponent<Props> = ({cover, description, coverGallery}) => {
+const Navigation: FunctionComponent<Props> = ({cover, coverFullWidth = true, description, coverGallery}) => {
     const router = useRouter();
     const locale = useLocale()
     const t = useTranslations('Navigation');
@@ -138,6 +141,7 @@ const Navigation: FunctionComponent<Props> = ({cover, description, coverGallery}
             {coverGallery && coverGallery.length > 0 ?
                 <CoverSwiper slides={coverGallery}/>
                 : cover ?
+                coverFullWidth ?
                 <>
                     <div className={styles.coverFixed}>
                         <Figure image={cover} fullWidth={true}/>
@@ -153,6 +157,19 @@ const Navigation: FunctionComponent<Props> = ({cover, description, coverGallery}
                         }
                     </div>
                 </>
+                :
+                <div className={styles.coverContained}>
+                    <div className={styles.coverContainedImage}>
+                        <Figure image={cover} sizes="(max-width: 1060px) calc(100vw - 60px), 1000px"/>
+                    </div>
+                    {description &&
+                        <ProgramReveal key={locale}>
+                            <div className={styles.description} data-reveal-group data-reveal="text">
+                                <BlockContent blocks={description[locale]}/>
+                            </div>
+                        </ProgramReveal>
+                    }
+                </div>
                 :
                 <div className={styles.spacer}/>
             }

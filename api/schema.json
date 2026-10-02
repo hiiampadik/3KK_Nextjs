@@ -729,6 +729,13 @@
         },
         "optional": false
       },
+      "hideNoRepriseNotice": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "boolean"
+        },
+        "optional": true
+      },
       "premiere": {
         "type": "objectAttribute",
         "value": {
@@ -939,6 +946,13 @@
               }
             }
           }
+        },
+        "optional": true
+      },
+      "coverFullWidth": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "boolean"
         },
         "optional": true
       },

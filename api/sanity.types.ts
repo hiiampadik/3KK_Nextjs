@@ -138,6 +138,7 @@ export type Project = {
   hideInRepertoire?: boolean
   slug: Slug
   status: 'planned' | 'ongoing' | 'archived'
+  hideNoRepriseNotice?: boolean
   premiere: string
   description: LocalizedRichParagraph
   abstract: LocalizedRichParagraph
@@ -172,6 +173,7 @@ export type Project = {
     crop?: SanityImageCrop
     _type: 'image'
   }
+  coverFullWidth?: boolean
   poster?: {
     asset?: {
       _ref: string

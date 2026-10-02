@@ -53,6 +53,7 @@ export default function Project({project, programItems, documents}: {project: Pr
         <Layout
             title={project.title[locale]}
             cover={project.cover}
+            coverFullWidth={project.coverFullWidth}
             seo={project.seo}
             image={project.cover && {
                 url: builder.image(project.cover).auto("format").width(800).quality(60).url(),
@@ -84,7 +85,7 @@ export default function Project({project, programItems, documents}: {project: Pr
                                 </div>
                             ))}
                         </div>
-                        :
+                        : !project.hideNoRepriseNotice &&
                         <div className={styles.noReruns}>
                             {t('noProgram')}
                         </div>
@@ -123,6 +124,18 @@ export default function Project({project, programItems, documents}: {project: Pr
             {project.gallery &&
                 <div className={styles.galleryContainer}>
                     <GallerySwiper gallery={project.gallery}/>
+                </div>
+            }
+            {project.poster &&
+                <div className={styles.posterContainer}>
+                    <div>
+                        <p className={styles.posterTitle}>{t('poster')}{':'}</p>
+                        <Figure
+                            image={project.poster}
+                            alt={t('poster')}
+                            sizes="(max-width: 575px) calc(100vw - 30px), 490px"
+                        />
+                    </div>
                 </div>
             }
         </Layout>

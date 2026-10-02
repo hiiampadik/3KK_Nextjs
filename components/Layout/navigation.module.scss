@@ -240,6 +240,34 @@
   }
 }
 
+// The opt-out variant (`coverFullWidth: false`): the cover scrolls with the page,
+// matching the width and margins of the content below it instead of bleeding to
+// the viewport edges. The padding keeps it clear of the fixed navigation.
+.coverContained {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 100px;
+
+  @media (max-width: $breakpoint-xs-max) {
+    padding-top: 90px;
+  }
+
+  .coverContainedImage {
+    @include margin;
+    max-width: 1000px;
+
+    img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: $bRadius;
+    }
+  }
+}
+
 // The swiper is pinned to the viewport via this wrapper (a plain div we control),
 // rather than putting `position: fixed` on the Swiper root — Swiper's own
 // `.swiper { position: relative }` base rule would otherwise win the cascade and
@@ -349,7 +377,7 @@
 
 // Shared look of the cover image + description, used by both the static cover
 // and the individual swiper slides.
-.coverContainer, .coverSlide {
+.coverContainer, .coverSlide, .coverContained {
   .cover {
     position: relative;
     overflow: hidden;
@@ -376,7 +404,7 @@
 
 // The static cover's description lives in the scrolling layer, so it needs an
 // opaque background + higher stacking to cover the pinned image as it rides up.
-.coverContainer .description {
+.coverContainer .description, .coverContained .description {
   position: relative;
   z-index: 1;
   background: $gray;

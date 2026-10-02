@@ -24,6 +24,8 @@ interface LayoutProps {
     readonly title?: string
     readonly loading?: boolean;
     readonly cover?: { asset?: { _ref: string }};
+    // Undefined is treated as true, so existing pages keep the full-bleed cover.
+    readonly coverFullWidth?: boolean
     readonly coverGallery?: ReadonlyArray<CoverSlide>
     readonly description?: LocalizedRichParagraph
     readonly image?: {
@@ -39,6 +41,7 @@ const Layout: FunctionComponent<PropsWithChildren<LayoutProps>> = (
         loading = undefined,
         image,
         cover,
+        coverFullWidth,
         coverGallery,
         description,
         seo
@@ -170,7 +173,7 @@ const Layout: FunctionComponent<PropsWithChildren<LayoutProps>> = (
             />
 
             <main>
-                <Navigation cover={cover} coverGallery={coverGallery} description={description}/>
+                <Navigation cover={cover} coverFullWidth={coverFullWidth} coverGallery={coverGallery} description={description}/>
                 <div className={styles.pageBody}>
                     <div className={classNames([styles.content, loading ? styles.loading : styles.loaded])}>
                         {children}
