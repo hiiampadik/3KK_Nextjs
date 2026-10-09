@@ -80,7 +80,7 @@ export default function Project({project, programItems, documents}: {project: Pr
                                     <div className={styles.eventLocation}>{item.location}</div>
                                     <div className={styles.eventLinks}>
                                         {item.facebook && <a href={item.facebook} target="_blank" rel="noopener noreferrer">Facebook</a>}
-                                        {item.ticket && <a href={item.ticket} target="_blank" rel="noopener noreferrer">Tickets</a>}
+                                        {item.ticket && <a href={item.ticket} target="_blank" rel="noopener noreferrer">{t('tickets')}</a>}
                                     </div>
                                 </div>
                             ))}
