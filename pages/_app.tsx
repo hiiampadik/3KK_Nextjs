@@ -6,6 +6,7 @@ import Script from 'next/script';
 import * as gtag from "../lib/gtag";
 import {IntlErrorCode, NextIntlClientProvider} from 'next-intl';
 import {Locale, LocaleContext} from '@/components/utils/useLocale';
+import {NewsletterContext} from '@/components/utils/useNewsletter';
 
 const MyApp: FunctionComponent<AppProps> = ({ Component, router, pageProps }) => {
     const locale: Locale = pageProps.locale ?? (router.query.locale as Locale) ?? 'cs';
@@ -40,20 +41,22 @@ const MyApp: FunctionComponent<AppProps> = ({ Component, router, pageProps }) =>
           `}
             </Script>
             <LocaleContext.Provider value={locale}>
-                <NextIntlClientProvider
-                    locale={locale}
-                    timeZone="Europe/Vienna"
-                    messages={pageProps.messages}
-                    onError={(error) => {
-                        if (error.code === IntlErrorCode.MISSING_MESSAGE) {
-                            console.warn('Missing translation:', error.name);
-                        }
-                    }}
-                >
-                    <OverlaysProvider>
-                        <Component key={router.route} {...pageProps} />
-                    </OverlaysProvider>
-                </NextIntlClientProvider>
+                <NewsletterContext.Provider value={pageProps.newsletter ?? null}>
+                    <NextIntlClientProvider
+                        locale={locale}
+                        timeZone="Europe/Vienna"
+                        messages={pageProps.messages}
+                        onError={(error) => {
+                            if (error.code === IntlErrorCode.MISSING_MESSAGE) {
+                                console.warn('Missing translation:', error.name);
+                            }
+                        }}
+                    >
+                        <OverlaysProvider>
+                            <Component key={router.route} {...pageProps} />
+                        </OverlaysProvider>
+                    </NextIntlClientProvider>
+                </NewsletterContext.Provider>
             </LocaleContext.Provider>
         </>
         )

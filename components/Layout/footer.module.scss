@@ -25,8 +25,18 @@
       padding: 8px 16px;
       @include outlinedLink;
       background: white;
+
+      &.tickets {
+        @include shimmerLink(#E5FC54);
+      }
+      &.newsletter {
+        @include shimmerLink(#32FE6B, $shimmerNewsletterDelay);
+      }
     }
 
+    .socials {
+      @include joinedLinks;
+    }
   }
 
   .rightContainer {
@@ -63,3 +73,5 @@
     }
     }
 }
+
+@include shimmerKeyframes;

@@ -7,11 +7,13 @@ import styles from './navigation.module.scss';
 import {classNames} from '@/components/utils/classNames';
 import {useTranslations} from 'next-intl';
 import {useLocale} from '@/components/utils/useLocale';
+import {useNewsletter} from '@/components/utils/useNewsletter';
 import Figure from '@/components/Sanity/Figure';
 import BlockContent from '@/components/Sanity/BlockContent';
 import {LocalizedRichParagraph} from '@/api/sanity.types';
 import CoverSwiper, {CoverSlide} from '@/components/Layout/CoverSwiper';
 import ProgramReveal from '@/components/Layout/ProgramReveal';
+import {FACEBOOK_URL, INSTAGRAM_URL, TICKETS_URL} from '@/components/Layout/links';
 
 interface Props {
     readonly cover?: { asset?: { _ref: string }};
@@ -35,6 +37,7 @@ const Navigation: FunctionComponent<Props> = ({cover, coverFullWidth = true, des
     const router = useRouter();
     const locale = useLocale()
     const t = useTranslations('Navigation');
+    const newsletter = useNewsletter();
 
     const navRef = useRef<HTMLElement>(null);
 
@@ -49,7 +52,10 @@ const Navigation: FunctionComponent<Props> = ({cover, coverFullWidth = true, des
         hasPlayedNavIntro = true;
 
         const nav = navRef.current;
-        const items = nav ? Array.from(nav.querySelectorAll('a')) : [];
+        // Links inside a `data-nav-group` (IG + FB) pop together as one piece.
+        const items = nav
+            ? Array.from(new Set(Array.from(nav.querySelectorAll('a'), (a) => a.closest('[data-nav-group]') ?? a)))
+            : [];
         if (items.length === 0) {
             setIntroPending(false);
             return;
@@ -115,18 +121,26 @@ const Navigation: FunctionComponent<Props> = ({cover, coverFullWidth = true, des
                 </div>
 
                 <div className={styles.navRight}>
-                    <a href={"https://www.instagram.com/3pluskk/"}
-                       className={classNames([styles.smallLink, styles.link6])}>
-                        <p>IG</p>
-                    </a>
-                    <a href={"https://www.facebook.com/3pluskk"}
-                       className={classNames([styles.smallLink, styles.link7])}>
-                        <p>FB</p>
-                    </a>
-                    <a href={"https://connect.boomevents.org/cs/organizer/d2324245-882a-43e7-8e7d-577816aa2926"}
+                    {newsletter &&
+                        <a href={newsletter}
+                           className={classNames([styles.smallLink, styles.newsletter])}>
+                            <p>{t('newsletter')}</p>
+                        </a>
+                    }
+                    <a href={TICKETS_URL}
                        className={classNames([styles.smallLink, styles.tickets, styles.link8])}>
                         <p>{t('tickets')}</p>
                     </a>
+                    <div className={styles.socials} data-nav-group>
+                        <a href={INSTAGRAM_URL}
+                           className={classNames([styles.smallLink, styles.link6])}>
+                            <p>IG</p>
+                        </a>
+                        <a href={FACEBOOK_URL}
+                           className={classNames([styles.smallLink, styles.link7])}>
+                            <p>FB</p>
+                        </a>
+                    </div>
                     <Link
                         href={switchLocalePath}
                         className={classNames([styles.smallLink, styles.link9])}

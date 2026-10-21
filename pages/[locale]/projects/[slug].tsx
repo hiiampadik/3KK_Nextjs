@@ -3,7 +3,7 @@ import {GetStaticPropsContext} from 'next';
 import client, {revalidateTime, sanityFetch} from '@/sanity/client';
 import Layout from '@/components/Layout';
 import {Project as ProjectSanity} from '@/api/sanity.types'
-import {QUERY_ALL_PROJECTS_SLUGS, QUERY_PROJECT_DETAILS} from '@/api/queries';
+import {QUERY_ALL_PROJECTS_SLUGS, QUERY_PROJECT_DETAILS, QUERY_NEWSLETTER} from '@/api/queries';
 import localizedDate from '@/components/utils/LocalizeDate';
 import localizedTime from '@/components/utils/LocalizeTime';
 import styles from '@/styles/project.module.scss'
@@ -168,6 +168,7 @@ export async function getStaticProps(context: GetStaticPropsContext) {
             programItems: data.programItems || [],
             documents: data.items || [],
             locale,
+            newsletter: await sanityFetch({query: QUERY_NEWSLETTER, useCdn: false}) ?? null,
             messages: (await import(`../../../public/locales/${locale}.json`)).default,
         },
         ...(!process.env.GITHUB_PAGES && {revalidate: revalidateTime}),

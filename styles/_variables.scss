@@ -163,3 +163,45 @@ $bRadius: 8px;
     }
   }
 }
+// Colour stripe sweeping right → left across a button. It crosses the button in
+// the first half of a 6s cycle, then rests. Newsletter sits left of Tickets and
+// runs 1.5s later, so the stripe leaving Tickets on its left edge enters
+// Newsletter on its right edge. `backwards` keeps the stripe off-screen during
+// the delay instead of showing it parked at position 0.
+$shimmerNewsletterDelay: 1.5s;
+
+@mixin shimmerLink($color, $delay: 0s) {
+  background-image: linear-gradient(90deg, white 25%, $color 45%, white 75%);
+  background-size: 200% 100%;
+  animation: linkAnimation 6s linear $delay infinite backwards;
+}
+
+// Include once at the root of every module using shimmerLink.
+@mixin shimmerKeyframes {
+  @keyframes linkAnimation {
+    0% {
+      background-position-x: -50%;
+    }
+    50% {
+      background-position-x: 150%;
+    }
+    100% {
+      background-position-x: 150%;
+    }
+  }
+}
+
+// Links in a row joined into one button: shared 1px divider, no inner radius.
+@mixin joinedLinks {
+  display: flex;
+
+  a:not(:first-child) {
+    border-left: none;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+  a:not(:last-child) {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+}

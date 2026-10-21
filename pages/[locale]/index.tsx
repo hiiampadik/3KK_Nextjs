@@ -1,6 +1,7 @@
 import Layout from '@/components/Layout';
 import React, {Fragment} from 'react';
 import {revalidateTime, sanityFetch} from '@/sanity/client';
+import {QUERY_NEWSLETTER} from '@/api/queries';
 import {GetStaticPropsContext} from 'next';
 import {QUERY_HOMEPAGE} from '@/api/homepage';
 import {Homepage as HomepageType} from '@/api/homepage'
@@ -125,6 +126,7 @@ export async function getStaticProps(context: GetStaticPropsContext) {
         props: {
             data,
             locale,
+            newsletter: await sanityFetch({query: QUERY_NEWSLETTER, useCdn: false}) ?? null,
             messages: (await import(`../../public/locales/${locale}.json`)).default,
         },
         ...(!process.env.GITHUB_PAGES && {revalidate: revalidateTime}),

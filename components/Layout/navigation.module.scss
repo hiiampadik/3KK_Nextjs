@@ -63,6 +63,16 @@
   visibility: hidden;
 }
 
+// A group pops as one piece: hide the group itself and let its links follow it,
+// so GSAP's autoAlpha on the group reveals them together.
+.introPending [data-nav-group] {
+  visibility: hidden;
+
+  a {
+    visibility: inherit;
+  }
+}
+
 .nav {
   left: 30px;
   right: 30px;
@@ -139,35 +149,22 @@
    @include outlinedLink;
     padding: 9px 19px;
 
-    &.tickets{
-      background-image: linear-gradient(90deg, white 25%, #E5FC54 45%, white 75%);
-      animation: linkAnimation 6s linear infinite;
-      background-size: 200% 100%;
-      @media (hover: hover) {
-        &:hover {
-          @include underline
-        }
-      }
+    &.tickets {
+      @include shimmerLink(#E5FC54);
     }
+    &.newsletter {
+      @include shimmerLink(#32FE6B, $shimmerNewsletterDelay);
+    }
+  }
+
+  .socials {
+    @include joinedLinks;
   }
 
   @media (max-width: $breakpoint-md-max) {
-    .link6, .link7, .link8 {
+    .socials, .link8, .newsletter {
         display: none;
     }
-  }
-}
-
-
-@keyframes linkAnimation {
-  0% {
-    background-position-x: -50%;
-  }
-  50% {
-    background-position-x: 150%;
-  }
-  100% {
-    background-position-x: 150%;
   }
 }
 
@@ -439,3 +436,6 @@
   bottom: 0;
   z-index: 1000;
 }
+
+
+@include shimmerKeyframes;

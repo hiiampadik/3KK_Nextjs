@@ -4,7 +4,7 @@ import {GetStaticPropsContext} from 'next';
 import {revalidateTime, sanityFetch} from '@/sanity/client';
 import Link from 'next/link';
 import {Project as ProjectSanity} from '@/api/sanity.types'
-import {QUERY_ALL_PROJECTS} from '@/api/queries';
+import {QUERY_ALL_PROJECTS, QUERY_NEWSLETTER} from '@/api/queries';
 import Figure from '@/components/Sanity/Figure';
 import styles from '@/styles/projects.module.scss'
 import {useTranslations} from 'next-intl';
@@ -108,6 +108,7 @@ export async function getStaticProps(context: GetStaticPropsContext) {
         props: {
             data,
             locale,
+            newsletter: await sanityFetch({query: QUERY_NEWSLETTER, useCdn: false}) ?? null,
             messages: (await import(`../../public/locales/${locale}.json`)).default,
         },
         ...(!process.env.GITHUB_PAGES && {revalidate: revalidateTime}),

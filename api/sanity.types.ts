@@ -33,6 +33,7 @@ export type Contact = {
   _rev: string
   address: LocalizedRichParagraph
   contacts: LocalizedRichParagraph
+  newsletter?: string
   seo: Seo
 }
 

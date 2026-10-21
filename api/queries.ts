@@ -20,3 +20,5 @@ export const QUERY_PROJECT_DETAILS = defineQuery(`
     "programItems": *[_type == "homepage"][0].program[references(^._id)]
   }
 `)
+
+export const QUERY_NEWSLETTER = defineQuery(`*[_type == 'contact'][0].newsletter`)

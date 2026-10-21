@@ -2,7 +2,7 @@ import Layout from '@/components/Layout';
 import React from 'react';
 import {revalidateTime, sanityFetch} from '@/sanity/client';
 import {GetStaticPropsContext} from 'next';
-import {QUERY_ABOUT} from '@/api/queries';
+import {QUERY_ABOUT, QUERY_NEWSLETTER} from '@/api/queries';
 import {About as AboutSanity} from '@/api/sanity.types'
 import styles from '@/styles/about.module.scss'
 import {useTranslations} from 'next-intl';
@@ -64,6 +64,7 @@ export async function getStaticProps(context: GetStaticPropsContext) {
         props: {
             data,
             locale,
+            newsletter: await sanityFetch({query: QUERY_NEWSLETTER, useCdn: false}) ?? null,
             messages: (await import(`../../public/locales/${locale}.json`)).default,
         },
         ...(!process.env.GITHUB_PAGES && {revalidate: revalidateTime}),
