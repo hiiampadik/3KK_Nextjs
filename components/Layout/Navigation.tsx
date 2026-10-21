@@ -122,21 +122,21 @@ const Navigation: FunctionComponent<Props> = ({cover, coverFullWidth = true, des
 
                 <div className={styles.navRight}>
                     {newsletter &&
-                        <a href={newsletter}
+                        <a href={newsletter} target={'_blank'}
                            className={classNames([styles.smallLink, styles.newsletter])}>
                             <p>{t('newsletter')}</p>
                         </a>
                     }
-                    <a href={TICKETS_URL}
+                    <a href={TICKETS_URL} target={'_blank'}
                        className={classNames([styles.smallLink, styles.tickets, styles.link8])}>
                         <p>{t('tickets')}</p>
                     </a>
                     <div className={styles.socials} data-nav-group>
-                        <a href={INSTAGRAM_URL}
+                        <a href={INSTAGRAM_URL} target={'_blank'}
                            className={classNames([styles.smallLink, styles.link6])}>
                             <p>IG</p>
                         </a>
-                        <a href={FACEBOOK_URL}
+                        <a href={FACEBOOK_URL} target={'_blank'}
                            className={classNames([styles.smallLink, styles.link7])}>
                             <p>FB</p>
                         </a>
