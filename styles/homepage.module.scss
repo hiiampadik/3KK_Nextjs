@@ -92,6 +92,10 @@
   border-radius: $bRadius;
   display: flex;
   gap: 10px;
+  // Flex items default to `min-width: auto`, so a long title would widen the row
+  // to its full text width and push `.externalLinks` out. Let it shrink instead.
+  flex: 1 1 auto;
+  min-width: 0;
   text-decoration: none;
   padding: 20px 0 10px;
 
@@ -115,9 +119,11 @@
     }
   }
   .nameContainer{
+    min-width: 0;
     h2 {
       @include headline2;
       margin-bottom: 8px;
+      overflow-wrap: anywhere;
     }
     // The gap below the pill lives on the mask wrapper, not the pill: inside the
     // clip box it would make the box taller than the pill, and the pill would
@@ -161,6 +167,7 @@
 .externalLinks {
   padding: 20px 0 10px;
   display: flex;
+  flex-shrink: 0;
   gap: 10px;
 
   // The mask wrapper is the flex item now, so it carries the alignment the
@@ -207,10 +214,8 @@
   }
 
   .scrollingPart {
-    flex: 1 0 auto;
-    @media (max-width: $breakpoint-xl-max) {
-      flex: 1 1 auto;
-    }
+    flex: 1 1 auto;
+    min-width: 0;
   }
 }
 
