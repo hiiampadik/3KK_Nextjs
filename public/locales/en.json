@@ -39,6 +39,7 @@
     "Contact": {
         "contact": "Contact",
         "address": "Address",
-        "billing": "Billing Information"
+        "billing": "Billing Information",
+        "documents": "Documents"
     }
 }

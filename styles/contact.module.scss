@@ -53,6 +53,28 @@
       bottom: 0;
       @include shadowBox;
     }
+
+    .documents {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
+      @include mono;
+
+      .document {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        @include underline;
+        color: inherit;
+
+        @media (hover: hover) {
+          &:hover {
+            text-decoration: none;
+          }
+        }
+      }
+    }
   }
 }
 

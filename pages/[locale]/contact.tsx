@@ -8,8 +8,17 @@ import styles from '@/styles/contact.module.scss';
 import BlockContent from '@/components/Sanity/BlockContent';
 import {useTranslations} from 'next-intl';
 import {useLocale} from '@/components/utils/useLocale';
+import Image from 'next/image';
 
-export default function Contact({data}: {data: ContactSanity}) {
+type DocumentItem = {
+    _key: string
+    _type: 'documentFile' | 'documentLink'
+    title: {cs?: string, en?: string}
+    url: string
+    extension?: string
+}
+
+export default function Contact({data}: {data: Omit<ContactSanity, 'documents'> & {documents?: DocumentItem[]}}) {
     const t = useTranslations('Contact');
     const locale = useLocale()
 
@@ -48,6 +57,18 @@ export default function Contact({data}: {data: ContactSanity}) {
                             loading="lazy"
                             referrerPolicy="no-referrer-when-downgrade"/>
                     </div>
+
+                    {data.documents && data.documents.length > 0 &&
+                        <div className={styles.documents}>
+                            <h2>{t('documents')}</h2>
+                            {data.documents.map(doc => (
+                                <a key={doc._key} href={doc.url} target="_blank" rel="noopener noreferrer" className={styles.document}>
+                                    <Image src="/file.svg" alt="" width={16} height={16} />
+                                    <span>{doc.title[locale]}{doc.extension && `.${doc.extension}`}</span>
+                                </a>
+                            ))}
+                        </div>
+                    }
                 </div>
             </div>
         </Layout>
@@ -66,7 +87,7 @@ export function getStaticPaths() {
 
 export async function getStaticProps(context: GetStaticPropsContext) {
     const locale = context.params!.locale as string;
-    const data: ContactSanity = await sanityFetch({query: QUERY_CONTACT, useCdn: false});
+    const data = await sanityFetch({query: QUERY_CONTACT, useCdn: false});
 
     return {
         props: {

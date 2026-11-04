@@ -39,6 +39,7 @@
     "Contact": {
         "contact": "Kontakt",
         "address": "Adresa",
-        "billing": "Fakturační údaje"
+        "billing": "Fakturační údaje",
+        "documents": "Dokumenty"
     }
 }

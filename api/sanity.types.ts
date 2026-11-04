@@ -34,7 +34,36 @@ export type Contact = {
   address: LocalizedRichParagraph
   contacts: LocalizedRichParagraph
   newsletter?: string
+  documents?: Array<
+    | {
+        title: LocalizedString
+        file: {
+          asset: {
+            _ref: string
+            _type: 'reference'
+            _weak?: boolean
+            [internalGroqTypeReferenceTo]?: 'sanity.fileAsset'
+          }
+          media?: unknown
+          _type: 'file'
+        }
+        _type: 'documentFile'
+        _key: string
+      }
+    | {
+        title: LocalizedString
+        url: string
+        _type: 'documentLink'
+        _key: string
+      }
+  >
   seo: Seo
+}
+
+export type LocalizedString = {
+  _type: 'localizedString'
+  cs?: string
+  en?: string
 }
 
 export type LocalizedRichParagraph = {
@@ -68,12 +97,6 @@ export type About = {
     _key: string
   }>
   seo: Seo
-}
-
-export type LocalizedString = {
-  _type: 'localizedString'
-  cs?: string
-  en?: string
 }
 
 export type SanityImageCrop = {
@@ -370,9 +393,9 @@ export type AllSanitySchemaTypes =
   | LocalizedText
   | Seo
   | Contact
+  | LocalizedString
   | LocalizedRichParagraph
   | About
-  | LocalizedString
   | SanityImageCrop
   | SanityImageHotspot
   | Homepage
